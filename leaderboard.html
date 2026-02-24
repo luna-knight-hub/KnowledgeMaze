@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bảng Xếp Hạng — Mê cung Tri thức</title>
+    <meta name="description" content="Bảng xếp hạng điểm cao nhất — Mê cung Tri thức">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* ── Leaderboard Page Layout ── */
+        body {
+            overflow-y: auto;
+        }
+
+        .lb-page {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 32px 16px 60px;
+            background:
+                radial-gradient(ellipse 80% 40% at 50% -5%, rgba(0, 243, 255, 0.10) 0%, transparent 60%),
+                radial-gradient(ellipse 50% 30% at 90% 90%, rgba(168, 85, 247, 0.08) 0%, transparent 50%),
+                var(--bg);
+        }
+
+        /* ── Header ── */
+        .lb-header {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .lb-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 0.82rem;
+            font-weight: 600;
+            padding: 6px 14px;
+            border: 1.5px solid var(--border);
+            border-radius: 20px;
+            margin-bottom: 20px;
+            transition: all var(--transition);
+        }
+
+        .lb-back:hover {
+            color: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .lb-hero-icon {
+            font-size: 3.5rem;
+            margin-bottom: 8px;
+        }
+
+        .lb-hero-title {
+            font-size: clamp(1.6rem, 5vw, 2.4rem);
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff 20%, var(--primary) 80%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .lb-hero-sub {
+            color: var(--text-dim);
+            font-size: 0.88rem;
+            margin-top: 6px;
+        }
+
+        /* ── Status badge ── */
+        .lb-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-top: 10px;
+        }
+
+        .lb-status.online {
+            background: rgba(0, 255, 136, 0.1);
+            color: var(--green);
+            border: 1px solid rgba(0, 255, 136, 0.25);
+        }
+
+        .lb-status.offline {
+            background: rgba(255, 215, 0, 0.1);
+            color: var(--accent);
+            border: 1px solid rgba(255, 215, 0, 0.25);
+        }
+
+        /* ── Period tabs ── */
+        .lb-tabs {
+            display: flex;
+            gap: 6px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 5px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .lb-tab {
+            padding: 8px 20px;
+            border-radius: 10px;
+            border: none;
+            background: none;
+            color: var(--text-dim);
+            font-family: var(--font);
+            font-size: 0.82rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all var(--transition);
+            white-space: nowrap;
+        }
+
+        .lb-tab.active {
+            background: var(--primary-dim);
+            color: var(--primary);
+            box-shadow: 0 0 0 1px rgba(0, 243, 255, 0.3);
+        }
+
+        .lb-tab:hover:not(.active) {
+            color: var(--text);
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        /* ── Main card ── */
+        .lb-card {
+            background: var(--card);
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-xl);
+            width: 100%;
+            max-width: 560px;
+            overflow: hidden;
+            box-shadow: var(--shadow-card), var(--shadow-glow);
+            position: relative;
+        }
+
+        .lb-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), #a855f7, var(--accent));
+        }
+
+        .lb-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 24px 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .lb-card-title {
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-dim);
+        }
+
+        .lb-refresh-btn {
+            background: none;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-dim);
+            font-family: var(--font);
+            font-size: 0.72rem;
+            font-weight: 600;
+            padding: 5px 12px;
+            cursor: pointer;
+            transition: all var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .lb-refresh-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .lb-refresh-btn.spinning {
+            animation: spin 0.6s linear;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ── List ── */
+        #lb-main-list {
+            list-style: none;
+            padding: 12px;
+        }
+
+        .lb-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 12px;
+            border-radius: 12px;
+            transition: background var(--transition);
+            border-left: 3px solid transparent;
+            margin-bottom: 4px;
+        }
+
+        .lb-item:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .lb-top-1 {
+            border-left-color: #ffd700;
+            background: rgba(255, 215, 0, 0.04);
+        }
+
+        .lb-top-2 {
+            border-left-color: #c0c0c0;
+            background: rgba(192, 192, 192, 0.03);
+        }
+
+        .lb-top-3 {
+            border-left-color: #cd7f32;
+            background: rgba(205, 127, 50, 0.03);
+        }
+
+        .lb-medal {
+            font-size: 1.4rem;
+            min-width: 32px;
+            text-align: center;
+        }
+
+        .lb-rank {
+            font-size: 0.78rem;
+            font-weight: 800;
+            color: var(--text-dim);
+        }
+
+        .lb-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .lb-name {
+            display: block;
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .lb-meta {
+            display: block;
+            font-size: 0.68rem;
+            color: var(--text-dim);
+            margin-top: 2px;
+        }
+
+        .lb-score {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--primary);
+            white-space: nowrap;
+        }
+
+        .lb-top-1 .lb-score {
+            color: #ffd700;
+        }
+
+        .lb-top-2 .lb-score {
+            color: #c0c0c0;
+        }
+
+        .lb-top-3 .lb-score {
+            color: #cd7f32;
+        }
+
+        .lb-empty,
+        .lb-loading {
+            text-align: center;
+            padding: 40px 16px;
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            list-style: none;
+        }
+
+        /* ── Stats row ── */
+        .lb-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            width: 100%;
+            max-width: 560px;
+            margin-top: 16px;
+        }
+
+        .lb-stat-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 14px 10px;
+            text-align: center;
+        }
+
+        .lb-stat-val {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .lb-stat-lbl {
+            font-size: 0.62rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-dim);
+            margin-top: 4px;
+        }
+
+        /* ── Admin section ── */
+        .lb-admin {
+            margin-top: 28px;
+            padding: 16px 20px;
+            background: rgba(255, 0, 122, 0.05);
+            border: 1px solid rgba(255, 0, 122, 0.15);
+            border-radius: var(--radius-md);
+            width: 100%;
+            max-width: 560px;
+        }
+
+        .lb-admin-title {
+            font-size: 0.68rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: rgba(255, 0, 122, 0.7);
+            margin-bottom: 10px;
+        }
+
+        .lb-admin-btn {
+            background: rgba(255, 0, 122, 0.1);
+            border: 1.5px solid rgba(255, 0, 122, 0.3);
+            border-radius: 10px;
+            color: #ff007a;
+            font-family: var(--font);
+            font-size: 0.78rem;
+            font-weight: 700;
+            padding: 8px 16px;
+            cursor: pointer;
+            transition: all var(--transition);
+        }
+
+        .lb-admin-btn:hover {
+            background: rgba(255, 0, 122, 0.18);
+        }
+
+        /* ── Auto-refresh indicator ── */
+        .lb-auto-refresh {
+            font-size: 0.65rem;
+            color: var(--text-dim);
+            text-align: center;
+            margin-top: 12px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="lb-page">
+        <!-- Back link -->
+        <a href="index.html" class="lb-back">← Về trang chủ</a>
+
+        <!-- Hero -->
+        <div class="lb-header">
+            <div class="lb-hero-icon">🏆</div>
+            <h1 class="lb-hero-title">Bảng Xếp Hạng</h1>
+            <p class="lb-hero-sub">Mê cung Tri thức — Ai là nhà vô địch hôm nay?</p>
+            <div class="lb-status offline" id="server-status">
+                <span>⚙️</span> <span id="status-text">Đang kiểm tra server...</span>
+            </div>
+        </div>
+
+        <!-- Stats row -->
+        <div class="lb-stats">
+            <div class="lb-stat-card">
+                <div class="lb-stat-val" id="stat-total">—</div>
+                <div class="lb-stat-lbl">Lượt chơi hôm nay</div>
+            </div>
+            <div class="lb-stat-card">
+                <div class="lb-stat-val" id="stat-players">—</div>
+                <div class="lb-stat-lbl">Người chơi</div>
+            </div>
+            <div class="lb-stat-card">
+                <div class="lb-stat-val" id="stat-top">—</div>
+                <div class="lb-stat-lbl">Điểm cao nhất</div>
+            </div>
+        </div>
+
+        <!-- Period tabs -->
+        <div class="lb-tabs" style="margin-top:20px;">
+            <button class="lb-tab active" data-period="today" onclick="switchPeriod('today', this)">🌅 Hôm nay</button>
+            <button class="lb-tab" data-period="week" onclick="switchPeriod('week', this)">📅 Tuần này</button>
+            <button class="lb-tab" data-period="month" onclick="switchPeriod('month', this)">🗓 Tháng này</button>
+            <button class="lb-tab" data-period="all" onclick="switchPeriod('all', this)">🌍 Tất cả</button>
+        </div>
+
+        <!-- Main leaderboard card -->
+        <div class="lb-card">
+            <div class="lb-card-header">
+                <div class="lb-card-title" id="lb-period-label">🌅 Hôm nay</div>
+                <button class="lb-refresh-btn" id="refresh-btn" onclick="refreshLeaderboard()">
+                    🔄 Làm mới
+                </button>
+            </div>
+            <ol id="lb-main-list">
+                <li class="lb-loading">⏳ Đang tải...</li>
+            </ol>
+        </div>
+
+        <!-- Auto-refresh notice -->
+        <p class="lb-auto-refresh" id="refresh-notice">Tự động làm mới sau <span id="countdown">30</span>s</p>
+
+        <!-- Admin panel -->
+        <div class="lb-admin">
+            <div class="lb-admin-title">🔐 Quản lý (Giáo viên)</div>
+            <button class="lb-admin-btn" onclick="adminReset()">🗑 Xoá kết quả hôm nay</button>
+            <span style="color:var(--text-dim);font-size:0.72rem;margin-left:10px;" id="admin-msg"></span>
+        </div>
+    </div>
+
+    <!-- Scripts — chỉ cần SessionManager và Leaderboard, không cần cả game engine -->
+    <script src="config.js"></script>
+    <script src="src/ui/SessionManager.js"></script>
+    <script src="src/ui/Leaderboard.js"></script>
+
+    <script>
+        // ─── State ───────────────────────────────────────────────
+        let currentPeriod = 'today';
+        let autoRefreshTimer = null;
+        let countdownTimer = null;
+        let countdown = 30;
+
+        const periodLabels = {
+            today: '🌅 Hôm nay',
+            week: '📅 Tuần này',
+            month: '🗓 Tháng này',
+            all: '🌍 Tất cả thời gian',
+        };
+
+        // ─── Init ────────────────────────────────────────────────
+        async function init() {
+            await checkServerStatus();
+            await loadLeaderboard();
+            await loadStats();
+            startAutoRefresh();
+        }
+
+        // ─── Server Status ───────────────────────────────────────
+        async function checkServerStatus() {
+            const badge = document.getElementById('server-status');
+            const text = document.getElementById('status-text');
+            try {
+                const res = await fetch('http://localhost:5000/api/leaderboard?period=today&limit=1',
+                    { signal: AbortSignal.timeout(2500) });
+                if (res.ok) {
+                    badge.className = 'lb-status online';
+                    text.textContent = '🟢 Server online — dữ liệu real-time';
+                    return;
+                }
+            } catch (_) { }
+            badge.className = 'lb-status offline';
+            text.textContent = '🟡 Offline mode — dữ liệu từ thiết bị này';
+        }
+
+        // ─── Load Leaderboard ────────────────────────────────────
+        async function loadLeaderboard() {
+            const list = document.getElementById('lb-main-list');
+            list.innerHTML = '<li class="lb-loading">⏳ Đang tải...</li>';
+
+            document.getElementById('lb-period-label').textContent =
+                periodLabels[currentPeriod] ?? currentPeriod;
+
+            await Leaderboard.renderByPeriod(list, currentPeriod, 20);
+        }
+
+        // ─── Load Stats (hôm nay) ────────────────────────────────
+        async function loadStats() {
+            try {
+                const data = await SessionManager.getTodayTop(1000);
+                if (!data || !data.length) return;
+
+                document.getElementById('stat-total').textContent =
+                    data.reduce((s, e) => s + (e.play_count ?? 1), 0).toLocaleString('vi-VN');
+
+                document.getElementById('stat-players').textContent =
+                    new Set(data.map(e => e.name)).size.toLocaleString('vi-VN');
+
+                const top = Math.max(...data.map(e => e.best_score ?? e.score ?? 0));
+                document.getElementById('stat-top').textContent =
+                    top.toLocaleString('vi-VN');
+            } catch (_) { }
+        }
+
+        // ─── Switch Period ───────────────────────────────────────
+        function switchPeriod(period, btnEl) {
+            currentPeriod = period;
+            document.querySelectorAll('.lb-tab').forEach(b => b.classList.remove('active'));
+            btnEl.classList.add('active');
+            loadLeaderboard();
+            resetCountdown();
+        }
+
+        // ─── Refresh ─────────────────────────────────────────────
+        async function refreshLeaderboard() {
+            const btn = document.getElementById('refresh-btn');
+            btn.classList.add('spinning');
+            btn.disabled = true;
+
+            await checkServerStatus();
+            await loadLeaderboard();
+            await loadStats();
+
+            setTimeout(() => {
+                btn.classList.remove('spinning');
+                btn.disabled = false;
+            }, 600);
+
+            resetCountdown();
+        }
+
+        // ─── Auto-refresh every 30s ──────────────────────────────
+        function startAutoRefresh() {
+            resetCountdown();
+        }
+
+        function resetCountdown() {
+            clearInterval(autoRefreshTimer);
+            clearInterval(countdownTimer);
+            countdown = 30;
+            updateCountdownDisplay();
+
+            countdownTimer = setInterval(() => {
+                countdown--;
+                updateCountdownDisplay();
+                if (countdown <= 0) {
+                    clearInterval(countdownTimer);
+                    refreshLeaderboard();
+                }
+            }, 1000);
+        }
+
+        function updateCountdownDisplay() {
+            const el = document.getElementById('countdown');
+            if (el) el.textContent = countdown;
+        }
+
+        // ─── Admin Reset ─────────────────────────────────────────
+        async function adminReset() {
+            if (!confirm('Xoá toàn bộ kết quả HÔM NAY?\nHành động này không thể hoàn tác!')) return;
+
+            const msgEl = document.getElementById('admin-msg');
+            msgEl.textContent = '⏳ Đang xử lý...';
+            try {
+                const res = await fetch(
+                    'http://localhost:5000/api/admin/reset?secret=TEACHER_RESET_2026',
+                    { signal: AbortSignal.timeout(5000) }
+                );
+                const data = await res.json();
+                if (res.ok && data.status === 'ok') {
+                    msgEl.style.color = 'var(--green)';
+                    msgEl.textContent = '✅ Đã xoá! Đang làm mới...';
+                    setTimeout(() => {
+                        msgEl.textContent = '';
+                        refreshLeaderboard();
+                    }, 1500);
+                } else {
+                    msgEl.style.color = '#ff007a';
+                    msgEl.textContent = '❌ Lỗi: ' + (data.error ?? 'Không xác định');
+                }
+            } catch (_) {
+                msgEl.style.color = '#ff007a';
+                msgEl.textContent = '❌ Không kết nối được server. Hãy chạy server.py trước.';
+            }
+        }
+
+        // ─── Boot ────────────────────────────────────────────────
+        init();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mê cung Tri thức - Kiến thức là sức mạnh</title>
+    <meta name="description"
+        content="Trò chơi giải đố kiến thức Tin học dành cho học sinh Tiểu học. Khám phá mê cung và chinh phục các thử thách!">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- ════════════════════════════════════
+         SCREEN 1: WELCOME (QR Landing)
+    ════════════════════════════════════ -->
+    <div id="screen-welcome" class="screen active">
+        <div class="particles" id="particles"></div>
+        <div class="welcome-content">
+            <div class="logo-badge">🧩</div>
+            <h1 class="game-logo">Mê cung<br><span>Tri thức</span></h1>
+            <p class="tagline">Khám phá — Giải đố — Phá đảo</p>
+
+            <div class="welcome-stats">
+                <div class="stat-chip">🏆 <b id="total-players">0</b> lượt chơi hôm nay</div>
+                <div class="stat-chip">🧩 <b id="total-mazes">0</b> ma trận</div>
+                <div class="stat-chip">⭐ Top: <b id="top-player-name">—</b></div>
+            </div>
+
+            <button class="btn-primary btn-glow" id="btn-start-journey" onclick="showScreen('screen-select')">
+                ⚡ Bắt đầu hành trình
+            </button>
+            <a href="editor.html" class="btn-ghost">🗺 Teacher Map Editor</a>
+            <a href="leaderboard.html" class="btn-ghost">📊 Bảng xếp hạng</a>
+        </div>
+    </div>
+
+    <!-- ════════════════════════════════════
+         SCREEN 2: MAZE SELECTION (NEW)
+    ════════════════════════════════════ -->
+    <div id="screen-select" class="screen">
+        <div class="select-layout">
+
+            <!-- Header -->
+            <div class="select-header">
+                <button class="btn-back" onclick="showScreen('screen-welcome')">← Quay lại</button>
+                <h2 class="select-title">🧩 Chọn Ma trận</h2>
+                <p class="select-subtitle">Mỗi ma trận có chủ đề và cấp độ khác nhau</p>
+            </div>
+
+            <!-- Grade Filter Tabs -->
+            <div class="grade-tabs">
+                <button class="grade-tab active" data-grade="all" onclick="filterGrade('all', this)">
+                    📚 Tất cả
+                </button>
+                <button class="grade-tab" data-grade="3" onclick="filterGrade('3', this)">
+                    🌱 Lớp 3
+                </button>
+                <button class="grade-tab" data-grade="4" onclick="filterGrade('4', this)">
+                    🌿 Lớp 4
+                </button>
+                <button class="grade-tab" data-grade="5" onclick="filterGrade('5', this)">
+                    🌳 Lớp 5
+                </button>
+            </div>
+
+            <!-- Maze Grid -->
+            <div class="maze-grid-scroll">
+                <div class="maze-grid" id="maze-grid">
+                    <!-- Rendered by JS -->
+                </div>
+            </div>
+
+            <!-- Empty state -->
+            <div class="maze-empty hidden" id="maze-empty">
+                <div class="maze-empty-icon">📭</div>
+                <div class="maze-empty-text">
+                    Chưa có ma trận nào cho lớp này.<br>
+                    Giáo viên hãy tạo ma trận trong <a href="editor.html">Map Editor</a>.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ════════════════════════════════════
+         SCREEN 3: NAME ENTRY (No Login)
+    ════════════════════════════════════ -->
+    <div id="screen-entry" class="screen">
+        <div class="entry-card">
+            <button class="btn-back" onclick="showScreen('screen-select')">← Đổi ma trận</button>
+            <div class="entry-icon" id="entry-maze-icon">🎮</div>
+            <h2 id="entry-maze-title">Nhập tên của bạn</h2>
+            <p class="entry-hint">Không cần tài khoản. Cứ nhập tên và bắt đầu thôi!</p>
+
+            <!-- Selected maze preview -->
+            <div class="selected-maze-chip" id="selected-maze-chip" style="display:none">
+                <span id="smz-icon">🧩</span>
+                <span id="smz-title">Ma trận đang chọn</span>
+                <span class="smz-grade" id="smz-grade">Lớp 3</span>
+            </div>
+
+            <div class="name-input-wrap">
+                <input type="text" id="player-name-input" class="name-input" maxlength="30"
+                    placeholder="Ví dụ: Minh Tuấn" autocomplete="off" spellcheck="false" />
+                <span class="name-input-icon">✏️</span>
+            </div>
+
+            <button class="btn-primary btn-glow" id="btn-enter-maze" onclick="enterMaze()" disabled>
+                🚀 Vào Mê cung!
+            </button>
+
+            <p class="play-limit-notice" id="play-limit-notice"></p>
+        </div>
+    </div>
+
+    <!-- ════════════════════════════════════
+         SCREEN 4: GAME
+    ════════════════════════════════════ -->
+    <div id="screen-game" class="screen">
+        <header id="game-header">
+            <div class="hud-left">
+                <span class="player-avatar">🧑</span>
+                <span id="hud-name">Người chơi</span>
+            </div>
+            <div class="hud-center">
+                <span class="hud-label">ĐIỂM</span>
+                <span id="score" class="hud-score">0</span>
+            </div>
+            <!-- Progress milestones -->
+            <div class="hud-progress-wrap">
+                <div class="hud-progress-track">
+                    <div class="hud-progress-fill" id="hud-progress-fill"></div>
+                </div>
+                <span class="hud-progress-label" id="hud-progress-label">0/0 câu</span>
+            </div>
+            <div class="hud-right">
+                <span id="plays" class="hud-plays">Lượt 1/3</span>
+                <a href="leaderboard.html" class="hud-link" title="Bảng xếp hạng">📊</a>
+                <button class="hud-exit-btn" onclick="confirmExitMaze()" title="Thoát mê cung">× Thoát</button>
+            </div>
+        </header>
+
+        <main id="maze-canvas-container">
+            <canvas id="maze-canvas"></canvas>
+            <div id="controls-hint"><span>⬆⬇⬅➡ hoặc WASD để di chuyển</span></div>
+        </main>
+
+        <div id="mobile-controls">
+            <button class="dpad-btn" id="dpad-up" onclick="window.game?.controller.handleMove(0,-1)">▲</button>
+            <div class="dpad-row">
+                <button class="dpad-btn" id="dpad-left" onclick="window.game?.controller.handleMove(-1,0)">◀</button>
+                <button class="dpad-btn dpad-center">●</button>
+                <button class="dpad-btn" id="dpad-right" onclick="window.game?.controller.handleMove(1,0)">▶</button>
+            </div>
+            <button class="dpad-btn" id="dpad-down" onclick="window.game?.controller.handleMove(0,1)">▼</button>
+        </div>
+
+        <!-- Quiz overlay -->
+        <section id="quiz-overlay" class="hidden">
+            <div class="quiz-card">
+                <div id="timer-bar"></div>
+                <div class="quiz-inner">
+                    <div class="quiz-type-badge" id="quiz-type-badge"></div>
+                    <div id="quiz-body"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- In-game completion panel -->
+        <section id="completion-overlay" class="hidden">
+            <div class="completion-card">
+                <div class="comp-fireworks" id="comp-fireworks"></div>
+                <div class="comp-trophy">🏆</div>
+                <h2 class="comp-title">Phá đảo thành công!</h2>
+                <p class="comp-subtitle" id="comp-player-name">Chúc mừng!</p>
+
+                <div class="comp-score-row">
+                    <div class="comp-score-box">
+                        <div class="csb-label">Điểm tổng</div>
+                        <div class="csb-value" id="comp-score">0</div>
+                    </div>
+                    <div class="comp-score-box">
+                        <div class="csb-label">Câu đúng</div>
+                        <div class="csb-value" id="comp-correct">0/0</div>
+                    </div>
+                    <div class="comp-score-box">
+                        <div class="csb-label">Xếp hạng</div>
+                        <div class="csb-value" id="comp-rank">#—</div>
+                    </div>
+                </div>
+
+                <!-- Per-question breakdown -->
+                <div class="comp-breakdown-wrap">
+                    <div class="comp-breakdown-title">📊 Kết quả từng câu</div>
+                    <div class="comp-breakdown" id="comp-breakdown"></div>
+                </div>
+
+                <!-- Leaderboard preview -->
+                <div class="comp-lb-wrap">
+                    <div class="comp-breakdown-title">🔥 Top 5 hôm nay</div>
+                    <ol id="comp-lb-list" class="lb-list"></ol>
+                </div>
+
+                <div class="comp-actions">
+                    <button class="btn-primary" onclick="showScreen('screen-select')">🧩 Đổi ma trận</button>
+                    <button class="btn-secondary" onclick="replayCurrentMaze()">🔄 Chơi lại</button>
+                    <a class="btn-ghost" href="leaderboard.html">📊 Bảng đầy đủ</a>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- ════════════════════════════════════
+         SCREEN 5: VICTORY & LEADERBOARD
+    ════════════════════════════════════ -->
+    <div id="screen-victory" class="screen">
+        <div class="victory-content">
+            <div class="fireworks" id="fireworks"></div>
+            <div class="trophy-badge">🏆</div>
+            <h2 class="victory-title">Phá đảo thành công!</h2>
+            <p class="victory-subtitle" id="victory-player-name">Chúc mừng bạn!</p>
+
+            <div class="final-score-card">
+                <div class="fscore-label">Điểm của bạn</div>
+                <div class="fscore-value" id="final-score">0</div>
+                <div class="fscore-rank" id="final-rank">Hạng #1</div>
+            </div>
+
+            <div class="leaderboard-preview">
+                <h3>🔥 Top 5 hôm nay</h3>
+                <ol id="lb-preview-list" class="lb-list"></ol>
+            </div>
+
+            <div class="victory-actions">
+                <button class="btn-primary" onclick="playAgain()">🔄 Chơi lại</button>
+                <button class="btn-secondary" onclick="showScreen('screen-select')">🧩 Ma trận khác</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="config.js"></script>
+    <script src="src/engine/MazeEngine.js"></script>
+    <script src="src/engine/QuestionEngine.js"></script>
+    <script src="src/model.js"></script>
+    <script src="src/view.js"></script>
+    <script src="src/controller.js"></script>
+    <script src="src/ui/SessionManager.js"></script>
+    <script src="src/ui/MazeLibrary.js"></script>
+    <script src="src/ui/Leaderboard.js"></script>
+    <script src="src/ui/ScreenFlow.js"></script>
+</body>
+
+</html>
