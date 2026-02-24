@@ -9,9 +9,12 @@ class GameModel {
         // Deep-clone toàn bộ config để tránh mutate object gốc
         this.config = {
             ...config,
-            milestones: config.milestones.map(m => ({ ...m, completed: false }))
+            milestones: config.milestones.map(m => ({ ...m, completed: false })),
+            start: config.start ? { ...config.start } : { x: 1, y: 1 },
+            end: config.end ? { ...config.end } : null,
         };
-        this.player = { x: 1, y: 1 };
+        // Player bắt đầu tại điểm Start (hoặc (1,1) nếu chưa đặt)
+        this.player = { ...this.config.start };
         this.score = 0;
         this.isLocked = false;
         this.maxPlays = config.settings.play_limit_per_day;

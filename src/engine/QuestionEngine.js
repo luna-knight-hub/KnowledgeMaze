@@ -39,6 +39,7 @@ class QuestionEngine {
         this.#stopTimer();
 
         this.#container.innerHTML = '';
+        SoundManager.play('quizOpen');
 
         // Render HTML theo loại
         switch (milestone.type) {

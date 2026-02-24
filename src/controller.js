@@ -40,6 +40,7 @@ class GameController {
         this.mazeEngine = this.view.mazeEngine;
         this.view.render(this.model);
         this.#setupKeyboard();
+        SoundManager.startBGM();
     }
 
     // ─── Movement ─────────────────────────────────────────────────
@@ -64,6 +65,7 @@ class GameController {
         if (this.model.isLocked) return;
         if (!this.model.movePlayer(dx, dy)) return;
 
+        SoundManager.play('move');
         const { x, y } = this.model.player;
         this.mazeEngine.setPosition(x, y);
         this.view.render(this.model);
@@ -75,6 +77,7 @@ class GameController {
     #checkMilestone() {
         const milestone = this.model.getMilestoneAtCurrentPos();
         if (milestone && !milestone.completed) {
+            SoundManager.play('milestone');
             this.#startQuiz(milestone);
         }
     }
@@ -94,6 +97,7 @@ class GameController {
 
                 this.model.score += earned;
                 milestone.completed = true;
+                milestone.result = 'correct';  // ← cho canvas biết kết quả
 
                 // Ghi log kết quả câu hỏi
                 this.#milestoneLog.push({
@@ -104,6 +108,7 @@ class GameController {
                 });
 
                 this.view.hideQuiz();
+                SoundManager.play('reward');
                 this.view.showReward(earned);
                 this.view.render(this.model);
                 this.model.isLocked = false;
@@ -121,7 +126,9 @@ class GameController {
                 });
 
                 milestone.completed = true;   // đánh dấu đã qua (cho phép di chuyển tiếp)
+                milestone.result = 'wrong';
                 this.view.hideQuiz();
+                SoundManager.play('wrong');
                 this.view.showWrong();
                 this.view.render(this.model);
                 this.model.isLocked = false;
@@ -139,7 +146,9 @@ class GameController {
                 });
 
                 milestone.completed = true;
+                milestone.result = 'timeout';
                 this.view.hideQuiz();
+                SoundManager.play('timeout');
                 this.view.showTimeout();
                 this.view.render(this.model);
                 this.model.isLocked = false;
@@ -153,6 +162,8 @@ class GameController {
         const allDone = this.model.config.milestones.every(m => m.completed);
         if (allDone) {
             this.model.isLocked = true;   // khóa di chuyển sau khi xong
+            SoundManager.play('victory');
+            SoundManager.stopBGM();
             setTimeout(() => {
                 this.onGameComplete(this.model.score, [...this.#milestoneLog]);
             }, 1200);

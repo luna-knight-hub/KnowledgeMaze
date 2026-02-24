@@ -661,7 +661,70 @@
             background: #14182e;
         }
 
-        /* ── Export Tab ── */
+        /* Portal — Start (xanh lá) */
+        .maze-table td.maze-start {
+            background: rgba(0, 255, 136, 0.22) !important;
+            box-shadow: inset 0 0 8px rgba(0, 255, 136, 0.5);
+            font-size: 11px;
+            text-align: center;
+            line-height: 24px;
+            color: #00ff88;
+            font-weight: 800;
+            border: 1.5px solid #00ff88 !important;
+        }
+
+        /* Portal — End (đỏ) */
+        .maze-table td.maze-end {
+            background: rgba(255, 68, 102, 0.22) !important;
+            box-shadow: inset 0 0 8px rgba(255, 68, 102, 0.5);
+            font-size: 11px;
+            text-align: center;
+            line-height: 24px;
+            color: #ff4466;
+            font-weight: 800;
+            border: 1.5px solid #ff4466 !important;
+        }
+
+        /* Maze edit mode buttons */
+        .maze-mode-row {
+            display: flex;
+            gap: 6px;
+            margin-top: 10px;
+        }
+
+        .maze-mode-btn {
+            flex: 1;
+            padding: 6px 4px;
+            border-radius: 8px;
+            border: 1.5px solid var(--border);
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--text-dim);
+            font-family: var(--font);
+            font-size: 0.68rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .maze-mode-btn.active-wall {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: rgba(0, 243, 255, 0.08);
+        }
+
+        .maze-mode-btn.active-start {
+            border-color: #00ff88;
+            color: #00ff88;
+            background: rgba(0, 255, 136, 0.08);
+        }
+
+        .maze-mode-btn.active-end {
+            border-color: #ff4466;
+            color: #ff4466;
+            background: rgba(255, 68, 102, 0.08);
+        }
+
+
         #tab-export {
             padding: 16px;
         }
@@ -757,9 +820,243 @@
             transform: translateX(-50%) translateY(0);
         }
     </style>
+
+    <!-- Password gate styles -->
+    <style>
+        body.editor-locked {
+            overflow: hidden;
+        }
+
+        #editor-auth-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: rgba(5, 6, 20, 0.97);
+            backdrop-filter: blur(18px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #editor-auth-overlay.hidden {
+            display: none;
+        }
+
+        .auth-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 40px 44px;
+            width: 360px;
+            box-shadow: 0 0 60px rgba(0, 243, 255, 0.08), 0 20px 60px rgba(0, 0, 0, 0.6);
+            text-align: center;
+        }
+
+        .auth-icon {
+            font-size: 3rem;
+            margin-bottom: 12px;
+        }
+
+        .auth-title {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--text);
+            margin-bottom: 4px;
+        }
+
+        .auth-sub {
+            font-size: 0.78rem;
+            color: var(--text-dim);
+            margin-bottom: 28px;
+        }
+
+        .auth-input-wrap {
+            position: relative;
+            margin-bottom: 16px;
+        }
+
+        .auth-input {
+            width: 100%;
+            padding: 12px 44px 12px 16px;
+            background: var(--card-2);
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            color: var(--text);
+            font-family: var(--font);
+            font-size: 1rem;
+            outline: none;
+            box-sizing: border-box;
+            letter-spacing: 0.12em;
+            transition: border-color 0.2s;
+        }
+
+        .auth-input:focus {
+            border-color: var(--primary);
+        }
+
+        .auth-input.error {
+            border-color: #ff4466;
+            animation: authShake 0.35s ease;
+        }
+
+        .auth-eye {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-dim);
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 4px;
+        }
+
+        .auth-btn {
+            width: 100%;
+            padding: 13px;
+            border-radius: 10px;
+            border: none;
+            background: linear-gradient(135deg, var(--primary) 0%, #006fff 100%);
+            color: #000;
+            font-family: var(--font);
+            font-size: 0.92rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: opacity 0.2s, transform 0.15s;
+        }
+
+        .auth-btn:hover {
+            opacity: 0.88;
+            transform: translateY(-1px);
+        }
+
+        .auth-btn:active {
+            transform: translateY(0);
+        }
+
+        .auth-error {
+            margin-top: 12px;
+            font-size: 0.76rem;
+            color: #ff4466;
+            min-height: 18px;
+        }
+
+        .auth-hint {
+            margin-top: 20px;
+            font-size: 0.68rem;
+            color: var(--text-dim);
+        }
+
+        .auth-hint code {
+            background: var(--card-2);
+            padding: 1px 6px;
+            border-radius: 4px;
+            color: var(--primary);
+            font-size: 0.68rem;
+        }
+
+        @keyframes authShake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            20%,
+            60% {
+                transform: translateX(-6px);
+            }
+
+            40%,
+            80% {
+                transform: translateX(6px);
+            }
+        }
+    </style>
+
+    <!-- Load teacher config FIRST — mật khẩu nằm trong file này -->
+    <script src="teacher-config.js"></script>
+
 </head>
 
-<body>
+<body class="editor-locked">
+
+    <!-- ── PASSWORD GATE ── -->
+    <div id="editor-auth-overlay">
+        <div class="auth-card">
+            <div class="auth-icon">🗀</div>
+            <div class="auth-title">Map Editor — Giáo viên</div>
+            <div class="auth-sub" id="auth-sub-text">Nhập mật khẩu để mở trình soạn thảo</div>
+
+            <div class="auth-input-wrap">
+                <input class="auth-input" type="password" id="auth-pw" placeholder="Mật khẩu..."
+                    onkeydown="if(event.key==='Enter') authSubmit()" autocomplete="current-password" autofocus>
+                <button class="auth-eye" id="auth-eye-btn" onclick="toggleAuthPw()" title="Hiện/Ẩn mật khẩu">👁</button>
+            </div>
+
+            <button class="auth-btn" onclick="authSubmit()">🔓 Mở Editor</button>
+            <div class="auth-error" id="auth-error"></div>
+            <div class="auth-hint">
+                Mật khẩu lưu trong <code>teacher-config.js</code>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ── EDITOR AUTH GATE ─────────────────────────
+        // Chạy trước khi editor khởi tạo
+        (function () {
+            // Nếu đã xác thực trong session này thì bỏ qua
+            if (sessionStorage.getItem('km_editor_auth') === '1') {
+                unlockEditor();
+                return;
+            }
+
+            // Chờ TEACHER_CONFIG load (script thực hiện đồng bộ)
+        })();
+
+        function authSubmit() {
+            const pw = document.getElementById('auth-pw').value;
+            const cfg = window.TEACHER_CONFIG ?? {};
+            const correct = cfg.EDITOR_PASSWORD ?? 'q12345';
+
+            if (pw === correct) {
+                sessionStorage.setItem('km_editor_auth', '1');
+                unlockEditor();
+            } else {
+                const inp = document.getElementById('auth-pw');
+                const err = document.getElementById('auth-error');
+                inp.classList.add('error');
+                inp.value = '';
+                err.textContent = '❌ Mật khẩu không đúng. Vui lòng thử lại.';
+                setTimeout(() => inp.classList.remove('error'), 400);
+                inp.focus();
+            }
+        }
+
+        function unlockEditor() {
+            document.getElementById('editor-auth-overlay').classList.add('hidden');
+            document.body.classList.remove('editor-locked');
+
+            // Điền tên trường/giáo viên nếu có
+            const cfg = window.TEACHER_CONFIG ?? {};
+            if (cfg.SCHOOL_NAME) {
+                const h1 = document.querySelector('#topbar h1');
+                if (h1) h1.title = cfg.SCHOOL_NAME;
+            }
+        }
+
+        function toggleAuthPw() {
+            const inp = document.getElementById('auth-pw');
+            const btn = document.getElementById('auth-eye-btn');
+            if (inp.type === 'password') {
+                inp.type = 'text'; btn.textContent = '🙈';
+            } else {
+                inp.type = 'password'; btn.textContent = '👁';
+            }
+        }
+    </script>
 
     <!-- ── TOP BAR ── -->
     <div id="topbar">
@@ -859,6 +1156,17 @@
                         <div id="maze-editor-container" style="overflow:auto;margin-top:8px;text-align:center;">
                             <!-- Generated dynamically -->
                         </div>
+
+                        <!-- Maze edit mode selector -->
+                        <div class="maze-mode-row">
+                            <button class="maze-mode-btn active-wall" id="mmode-wall"
+                                onclick="setMazeEditMode('wall')">🧱 Tường/Đường</button>
+                            <button class="maze-mode-btn" id="mmode-start" onclick="setMazeEditMode('start')">🟢 Đặt
+                                Start</button>
+                            <button class="maze-mode-btn" id="mmode-end" onclick="setMazeEditMode('end')">🔴 Đặt
+                                End</button>
+                        </div>
+
                         <div style="margin-top:8px;display:flex;gap:8px;">
                             <button class="tb-btn" onclick="resizeMaze(-1)" style="flex:1;font-size:0.72rem">− Nhỏ
                                 hơn</button>
@@ -1072,6 +1380,11 @@
         let milestones = [];
         let currentMode = 'place';
         let selectedId = null;
+
+        // Start / End portal state
+        let mazeStart = { x: 1, y: 1 };
+        let mazeEnd = { x: 7, y: 7 };
+        let mazeEditMode = 'wall'; // 'wall' | 'start' | 'end'
 
         // Default maze (9×9)
         let mazeGrid = [
@@ -1345,8 +1658,21 @@
             for (let y = 0; y < rows; y++) {
                 html += '<tr>';
                 for (let x = 0; x < cols; x++) {
-                    const cls = mazeGrid[y][x] === 1 ? 'wall' : 'path';
-                    html += `<td class="${cls}" onclick="toggleCell(${y},${x})" title="(${x},${y})"></td>`;
+                    const isStart = mazeStart && mazeStart.x === x && mazeStart.y === y;
+                    const isEnd = mazeEnd && mazeEnd.x === x && mazeEnd.y === y;
+
+                    let cls, label;
+                    if (isStart) {
+                        cls = 'path maze-start';
+                        label = 'S';
+                    } else if (isEnd) {
+                        cls = 'path maze-end';
+                        label = 'E';
+                    } else {
+                        cls = mazeGrid[y][x] === 1 ? 'wall' : 'path';
+                        label = '';
+                    }
+                    html += `<td class="${cls}" onclick="handleCellClick(${y},${x})" title="(${x},${y})">${label}</td>`;
                 }
                 html += '</tr>';
             }
@@ -1354,11 +1680,48 @@
             container.innerHTML = html;
         }
 
-        function toggleCell(r, c) {
-            // Não deixar alterar bordas
+        function setMazeEditMode(mode) {
+            mazeEditMode = mode;
+            // Update button styles
+            ['wall', 'start', 'end'].forEach(m => {
+                const btn = document.getElementById(`mmode-${m}`);
+                if (!btn) return;
+                btn.className = `maze-mode-btn${mode === m ? ' active-' + m : ''}`;
+            });
+        }
+
+        function handleCellClick(r, c) {
+            // Bordas nunca mudam
             if (r === 0 || c === 0 || r === mazeGrid.length - 1 || c === mazeGrid[0].length - 1) return;
+
+            if (mazeEditMode === 'start') {
+                // Não deixar colocar Start em parede
+                if (mazeGrid[r][c] === 1) return;
+                mazeStart = { x: c, y: r };
+                renderMazeTable();
+                return;
+            }
+
+            if (mazeEditMode === 'end') {
+                if (mazeGrid[r][c] === 1) return;
+                mazeEnd = { x: c, y: r };
+                renderMazeTable();
+                return;
+            }
+
+            // Default: toggle wall/path
+            // Không cho xóa ô đang là Start hoặc End
+            const isPortal = (mazeStart?.x === c && mazeStart?.y === r) ||
+                (mazeEnd?.x === c && mazeEnd?.y === r);
+            if (isPortal) return;
+
             mazeGrid[r][c] = mazeGrid[r][c] === 1 ? 0 : 1;
             renderMazeTable();
+        }
+
+        function toggleCell(r, c) {
+            // Legacy shim — delegate to handleCellClick
+            handleCellClick(r, c);
         }
 
         function resizeMaze(delta) {
@@ -1415,6 +1778,8 @@
                         end: (document.getElementById('cfg-end').value || '2026-12-31T23:59') + ':00',
                     }
                 },
+                start: mazeStart ?? { x: 1, y: 1 },
+                end: mazeEnd ?? null,
                 maze: mazeGrid,
                 milestones: milestones.map(({ id, ...rest }) => rest) // loại id nội bộ
             };
@@ -1548,6 +1913,9 @@
             }
             if (cfg.maze) {
                 mazeGrid = cfg.maze;
+                // Restore Start / End portals
+                mazeStart = cfg.start ? { ...cfg.start } : { x: 1, y: 1 };
+                mazeEnd = cfg.end ? { ...cfg.end } : { x: mazeGrid[0].length - 2, y: mazeGrid.length - 2 };
                 renderMazeTable();
             }
 

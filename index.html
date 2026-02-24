@@ -241,8 +241,27 @@
         </div>
     </div>
 
+    <!-- Floating Audio Controls -->
+    <div class="audio-fab" id="audio-fab">
+        <div class="audio-panel" id="audio-panel" aria-hidden="true">
+            <button class="audio-panel-btn" id="audio-bgm-btn" onclick="SoundManager.toggleBGM()"
+                title="Toggle nhạc nền">
+                🎵 Nhạc nền: BẬT
+            </button>
+            <button class="audio-panel-btn" id="audio-sfx-btn" onclick="SoundManager.toggleSFX()"
+                title="Toggle hiệu ứng">
+                🔊 Hiệu ứng: BẬT
+            </button>
+        </div>
+        <button class="audio-main-btn" id="audio-main-btn" onclick="toggleAudioPanel()" title="Âm thanh"
+            aria-label="Mở cài đặt âm thanh">
+            <span class="audio-icon" id="audio-icon">🔊</span>
+        </button>
+    </div>
+
     <!-- Scripts -->
     <script src="config.js"></script>
+    <script src="src/SoundManager.js"></script>
     <script src="src/engine/MazeEngine.js"></script>
     <script src="src/engine/QuestionEngine.js"></script>
     <script src="src/model.js"></script>
@@ -252,6 +271,33 @@
     <script src="src/ui/MazeLibrary.js"></script>
     <script src="src/ui/Leaderboard.js"></script>
     <script src="src/ui/ScreenFlow.js"></script>
+    <script>
+        // ── Audio FAB ─────────────────────────────────────
+        let _audioPanelOpen = false;
+
+        function toggleAudioPanel() {
+            _audioPanelOpen = !_audioPanelOpen;
+            const panel = document.getElementById('audio-panel');
+            const fab = document.getElementById('audio-fab');
+            panel.classList.toggle('open', _audioPanelOpen);
+            panel.setAttribute('aria-hidden', !_audioPanelOpen);
+            fab.classList.toggle('panel-open', _audioPanelOpen);
+            SoundManager.play('click');
+        }
+
+        // Close panel when clicking outside
+        document.addEventListener('click', (e) => {
+            if (_audioPanelOpen && !e.target.closest('#audio-fab')) {
+                _audioPanelOpen = false;
+                document.getElementById('audio-panel').classList.remove('open');
+                document.getElementById('audio-panel').setAttribute('aria-hidden', 'true');
+                document.getElementById('audio-fab').classList.remove('panel-open');
+            }
+        });
+
+        // Init SoundManager on page load (preferences loaded; BGM starts on first game)
+        SoundManager.init();
+    </script>
 </body>
 
 </html>

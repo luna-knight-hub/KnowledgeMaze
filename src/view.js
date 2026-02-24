@@ -48,7 +48,9 @@ class GameView {
             this.canvas,
             model.config.maze,
             onCellEnter,
-            model.config.milestones   // ← live reference để markers cập nhật real-time
+            model.config.milestones,   // ← live reference để markers cập nhật real-time
+            model.config.start ?? null,
+            model.config.end ?? null
         );
     }
 
