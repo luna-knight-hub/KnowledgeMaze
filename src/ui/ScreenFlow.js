@@ -1,9 +1,113 @@
+// ─── Competition Guard ───────────────────────────────────────────
 /**
- * SCREEN FLOW CONTROLLER — Multi-Maze Edition
- *
- * Flow: Welcome → MazeSelect → NameEntry → Game → Victory
- * playerState.activeMazeId theo dõi ma trận đang chọn.
+ * Quản lý cửa sổ thời gian thi.
+ * Đọc start/end từ GAME_CONFIG.settings.competition_window.
+ * Trạng thái: BEFORE → đếm ngược | ACTIVE → bình thường | ENDED → khóa
  */
+const CompetitionGuard = (() => {
+    let _countdownTimer = null;
+    let _endWatchTimer = null;
+    let _status = 'ACTIVE';
+
+    function _getWindow() {
+        const cfg = window.GAME_CONFIG?.settings?.competition_window;
+        if (!cfg) return { start: null, end: null };
+        return {
+            start: cfg.start ? new Date(cfg.start) : null,
+            end: cfg.end ? new Date(cfg.end) : null,
+        };
+    }
+
+    function _fmt2(n) { return String(n).padStart(2, '0'); }
+
+    function _computeStatus() {
+        const { start, end } = _getWindow();
+        const now = new Date();
+        if (start && now < start) return 'BEFORE';
+        if (end && now > end) return 'ENDED';
+        return 'ACTIVE';
+    }
+
+    function _showBeforeOverlay(startDt) {
+        document.getElementById('comp-before-overlay')?.classList.remove('hidden');
+        document.getElementById('comp-ended-overlay')?.classList.add('hidden');
+
+        // Nhãn giờ bắt đầu
+        const lbl = document.getElementById('comp-start-time-lbl');
+        if (lbl && startDt) {
+            lbl.textContent = `Giờ bắt đầu: ${startDt.toLocaleString('vi-VN')}`;
+        }
+
+        // Đếm ngược tick mỗi giây
+        clearInterval(_countdownTimer);
+        _countdownTimer = setInterval(() => {
+            const secs = Math.max(0, Math.floor((startDt - new Date()) / 1000));
+            const h = Math.floor(secs / 3600);
+            const m = Math.floor((secs % 3600) / 60);
+            const s = secs % 60;
+            const hEl = document.getElementById('ccd-h');
+            const mEl = document.getElementById('ccd-m');
+            const sEl = document.getElementById('ccd-s');
+            if (hEl) hEl.textContent = _fmt2(h);
+            if (mEl) mEl.textContent = _fmt2(m);
+            if (sEl) sEl.textContent = _fmt2(s);
+
+            if (secs === 0) {
+                clearInterval(_countdownTimer);
+                _unlock();  // tự chuyển sang ACTIVE
+            }
+        }, 1000);
+    }
+
+    function _showEndedOverlay() {
+        document.getElementById('comp-ended-overlay')?.classList.remove('hidden');
+        document.getElementById('comp-before-overlay')?.classList.add('hidden');
+        // Khóa toàn bộ game nếu đang chơi
+        if (window.game?.model) window.game.model.isLocked = true;
+    }
+
+    function _unlock() {
+        _status = 'ACTIVE';
+        document.getElementById('comp-before-overlay')?.classList.add('hidden');
+        document.getElementById('comp-ended-overlay')?.classList.add('hidden');
+        _watchEnd();
+    }
+
+    /** Canh thời điểm kết thúc để tự động khóa */
+    function _watchEnd() {
+        clearTimeout(_endWatchTimer);
+        const { end } = _getWindow();
+        if (!end) return;
+        const ms = end - new Date();
+        if (ms <= 0) { _showEndedOverlay(); return; }
+        _endWatchTimer = setTimeout(() => {
+            _status = 'ENDED';
+            _showEndedOverlay();
+        }, ms);
+    }
+
+    /** Gọi khi DOMContentLoaded */
+    function check() {
+        const { start, end } = _getWindow();
+        _status = _computeStatus();
+
+        if (_status === 'BEFORE') {
+            _showBeforeOverlay(start);
+        } else if (_status === 'ENDED') {
+            // Hiện overlay ngay lập tức
+            requestAnimationFrame(() => _showEndedOverlay());
+        } else {
+            // ACTIVE — canh thời điểm kết thúc
+            _watchEnd();
+        }
+    }
+
+    /** Cho controller.js kiểm tra trước khi khởi động game */
+    function isActive() { return _computeStatus() === 'ACTIVE'; }
+
+    return { check, isActive };
+})();
+
 
 // ─── Player State ───────────────────────────────────────────────
 let playerState = {
@@ -29,6 +133,9 @@ function showScreen(id) {
 
 // ─── App Init ───────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', async () => {
+    // Kiểm tra cửa sổ thi ngay khi tải trang
+    CompetitionGuard.check();
+
     // Seed demo data nếu thư viện rỗng
     MazeLibrary.seedIfEmpty();
 
@@ -164,6 +271,12 @@ async function updatePlayLimitNotice() {
 }
 
 async function enterMaze() {
+    // Chặn: nếu ngoài cửa sổ thi
+    if (!CompetitionGuard.isActive()) {
+        CompetitionGuard.check(); // hiện lại overlay tương ứng
+        return;
+    }
+
     const name = document.getElementById('player-name-input').value.trim();
     if (!name || !playerState.activeMazeId) return;
 

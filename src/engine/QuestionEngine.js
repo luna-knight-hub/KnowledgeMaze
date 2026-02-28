@@ -153,12 +153,13 @@ class QuestionEngine {
             `<div class="match-item-a"
                               data-index="${i}"
                               data-correct="${rights[i]}"
+                              data-left="${l.replace(/"/g, '&quot;')}"
                               data-matched="">${l}</div>`
         ).join('')}
                 </div>
                 <div class="col-b">
                     ${shuffled.map(r =>
-            `<div class="match-item-b" data-value="${r}">${r}</div>`
+            `<div class="match-item-b" data-value="${r.replace(/"/g, '&quot;')}">${r}</div>`
         ).join('')}
                 </div>
             </div>
@@ -278,42 +279,100 @@ class QuestionEngine {
     // ─── Matching Interaction ────────────────────────────────────
 
     #setupMatchingInteraction() {
-        let selectedB = null;
+        // Trạng thái chọn hiện tại
+        let selSide = null;   // 'a' | 'b' | null
+        let selEl = null;   // element
 
-        const bItems = this.#container.querySelectorAll('.match-item-b');
-        const aItems = this.#container.querySelectorAll('.match-item-a');
+        const aItems = [...this.#container.querySelectorAll('.match-item-a')];
+        const bItems = [...this.#container.querySelectorAll('.match-item-b')];
 
-        bItems.forEach(bEl => {
-            bEl.addEventListener('click', () => {
-                if (this.#answered) return;
-                // Toggle selection
-                if (selectedB === bEl) {
-                    bEl.classList.remove('selected');
-                    selectedB = null;
-                    return;
+        // --- helpers ---
+        const clearSel = () => {
+            selEl?.classList.remove('selected');
+            selSide = null;
+            selEl = null;
+        };
+
+        const unmatchA = (aEl) => {
+            const oldVal = aEl.dataset.matched;
+            if (!oldVal) return;
+            aEl.dataset.matched = '';
+            aEl.classList.remove('paired');
+            // Ảnh văn bản gốc từ data-left
+            aEl.innerHTML = aEl.dataset.left;
+            // Trả B về tự do
+            bItems.forEach(b => {
+                if (b.dataset.value === oldVal) {
+                    b.classList.remove('matched');
+                    b.textContent = b.dataset.value;
                 }
-                bItems.forEach(b => b.classList.remove('selected'));
-                selectedB = bEl;
-                bEl.classList.add('selected');
             });
-        });
+        };
 
-        aItems.forEach(aEl => {
-            aEl.addEventListener('click', () => {
-                if (this.#answered || !selectedB) return;
+        const makePair = (aEl, bEl) => {
+            const bVal = bEl.dataset.value;
 
-                const val = selectedB.dataset.value;
-                const leftText = aEl.textContent.split('→')[0].trim();
+            // Nếu A đã có cặp cũ → hủy
+            unmatchA(aEl);
 
-                // Ghi lại matched value vào data attribute
-                aEl.dataset.matched = val;
-                aEl.innerHTML = `${leftText} <span class="match-arrow">→</span> <b>${val}</b>`;
+            // Nếu B này đã nối với A khác → hủy cặp kia
+            aItems.forEach(a => { if (a !== aEl && a.dataset.matched === bVal) unmatchA(a); });
 
-                selectedB.classList.remove('selected');
-                selectedB.classList.add('matched');
-                selectedB = null;
-            });
-        });
+            // Tạo cặp mới
+            aEl.dataset.matched = bVal;
+            aEl.classList.add('paired');
+            aEl.innerHTML =
+                `<span>${aEl.dataset.left}</span>` +
+                `<span class="match-arrow">→</span>` +
+                `<b>${bVal}</b>`;
+
+            bEl.classList.add('matched');
+            clearSel();
+        };
+
+        // --- click handlers ---
+        const onClickA = (aEl) => {
+            if (this.#answered) return;
+
+            if (selSide === 'b') {
+                // B đang chọn → nối ngay
+                makePair(aEl, selEl);
+                return;
+            }
+
+            if (selSide === 'a') {
+                if (selEl === aEl) { clearSel(); return; }   // bỏ chọn
+                clearSel();
+            }
+
+            // Chọn A (kể cả đã paired — mợi xác nhận lại)
+            selSide = 'a';
+            selEl = aEl;
+            aEl.classList.add('selected');
+        };
+
+        const onClickB = (bEl) => {
+            if (this.#answered) return;
+
+            if (selSide === 'a') {
+                // A đang chọn → nối ngay
+                makePair(selEl, bEl);
+                return;
+            }
+
+            if (selSide === 'b') {
+                if (selEl === bEl) { clearSel(); return; }   // bỏ chọn
+                clearSel();
+            }
+
+            // Chọn B
+            selSide = 'b';
+            selEl = bEl;
+            bEl.classList.add('selected');
+        };
+
+        aItems.forEach(aEl => aEl.addEventListener('click', () => onClickA(aEl)));
+        bItems.forEach(bEl => bEl.addEventListener('click', () => onClickB(bEl)));
     }
 
     // ─── Timer ───────────────────────────────────────────────────

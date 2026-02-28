@@ -24,11 +24,25 @@ class GameModel {
 
     checkStatus() {
         const now = new Date();
-        if (now < this.startTime || now > this.endTime) {
+        if (now < this.startTime) {
             this.isLocked = true;
-            return 'LOCKED';
+            return 'BEFORE';   // Chưa đến giờ — hiển thị đếm ngược
         }
-        return 'ACTIVE';
+        if (now > this.endTime) {
+            this.isLocked = true;
+            return 'ENDED';    // Đã hết giờ — khóa vĩnh viễn
+        }
+        return 'ACTIVE';       // Trong cửa sổ thi
+    }
+
+    /** Số giây còn lại đến khi bắt đầu (nếu BEFORE) */
+    secondsUntilStart() {
+        return Math.max(0, Math.floor((this.startTime - new Date()) / 1000));
+    }
+
+    /** Số giây còn lại đến khi kết thúc (nếu ACTIVE) */
+    secondsUntilEnd() {
+        return Math.max(0, Math.floor((this.endTime - new Date()) / 1000));
     }
 
     movePlayer(dx, dy) {

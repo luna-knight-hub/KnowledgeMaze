@@ -298,6 +298,157 @@
         // Init SoundManager on page load (preferences loaded; BGM starts on first game)
         SoundManager.init();
     </script>
+
+    <!-- ════ COMPETITION WINDOW OVERLAYS ════ -->
+
+    <!-- Trước giờ: đếm ngược -->
+    <div id="comp-before-overlay" class="comp-overlay hidden">
+        <div class="comp-overlay-card">
+            <div class="comp-overlay-icon">⏳</div>
+            <h2 class="comp-overlay-title">Cuộc thi chưa bắt đầu</h2>
+            <p class="comp-overlay-sub">Bắt đầu sau</p>
+            <div class="comp-countdown" id="comp-countdown">
+                <div class="ccd-block"><span class="ccd-num" id="ccd-h">00</span><span class="ccd-lbl">giờ</span></div>
+                <div class="ccd-sep">:</div>
+                <div class="ccd-block"><span class="ccd-num" id="ccd-m">00</span><span class="ccd-lbl">phút</span></div>
+                <div class="ccd-sep">:</div>
+                <div class="ccd-block"><span class="ccd-num" id="ccd-s">00</span><span class="ccd-lbl">giây</span></div>
+            </div>
+            <p class="comp-overlay-time" id="comp-start-time-lbl"></p>
+        </div>
+    </div>
+
+    <!-- Sau giờ: kết thúc -->
+    <div id="comp-ended-overlay" class="comp-overlay hidden">
+        <div class="comp-overlay-card">
+            <div class="comp-overlay-icon">🏁</div>
+            <h2 class="comp-overlay-title">Cuộc thi đã kết thúc</h2>
+            <p class="comp-overlay-sub">Cảm ơn tất cả học sinh đã tham gia!</p>
+            <a href="leaderboard.html" class="btn-primary"
+                style="display:inline-block;margin-top:20px;padding:12px 28px;text-decoration:none">
+                📊 Xem bảng xếp hạng
+            </a>
+        </div>
+    </div>
+
+    <style>
+        /* ── Competition Overlays ── */
+        .comp-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 950;
+            background: rgba(4, 5, 18, 0.96);
+            backdrop-filter: blur(20px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .comp-overlay.hidden {
+            display: none;
+        }
+
+        .comp-overlay-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 48px 56px;
+            text-align: center;
+            max-width: 420px;
+            width: 90%;
+            box-shadow: 0 0 80px rgba(0, 243, 255, 0.07), 0 24px 64px rgba(0, 0, 0, 0.7);
+        }
+
+        .comp-overlay-icon {
+            font-size: 3.5rem;
+            margin-bottom: 16px;
+        }
+
+        .comp-overlay-title {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--text);
+            margin: 0 0 8px;
+        }
+
+        .comp-overlay-sub {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            margin: 0 0 28px;
+        }
+
+        .comp-overlay-time {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            margin-top: 16px;
+        }
+
+        .comp-countdown {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+
+        .ccd-block {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .ccd-num {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--primary);
+            background: var(--card-2);
+            border: 1.5px solid var(--border);
+            border-radius: 12px;
+            padding: 8px 18px;
+            min-width: 72px;
+            text-align: center;
+            font-variant-numeric: tabular-nums;
+            text-shadow: 0 0 20px rgba(0, 243, 255, 0.4);
+            animation: ccdPulse 1s ease-in-out infinite alternate;
+        }
+
+        .ccd-lbl {
+            font-size: 0.65rem;
+            color: var(--text-dim);
+            margin-top: 4px;
+        }
+
+        .ccd-sep {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 18px;
+            opacity: 0.7;
+        }
+
+        @keyframes ccdPulse {
+            from {
+                text-shadow: 0 0 10px rgba(0, 243, 255, 0.3);
+            }
+
+            to {
+                text-shadow: 0 0 28px rgba(0, 243, 255, 0.7);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.97);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+    </style>
+
 </body>
 
 </html>
