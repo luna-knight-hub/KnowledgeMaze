@@ -1,0 +1,4 @@
+# Knowledge Maze — Python Dependencies
+# Server chỉ dùng thư viện chuẩn (stdlib), không cần cài thêm.
+# Nếu sau này cần thêm package, ghi vào đây rồi chạy:
+#   venv\Scripts\pip install -r requirements.txt
