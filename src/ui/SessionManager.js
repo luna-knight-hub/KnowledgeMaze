@@ -14,7 +14,7 @@
 class SessionManager {
     static STORAGE_KEY = 'km_sessions';
     static IP_CACHE_KEY = 'km_cached_ip';
-    static LIMIT_PER_DAY = window.GAME_CONFIG?.settings?.play_limit_per_day ?? 3;
+    static LIMIT_PER_DAY = window.ACTIVE_GAME_CONFIG?.settings?.play_limit_per_day ?? 3;
 
     // Địa chỉ backend Python (server.py).
     // Nếu server không chạy, FE tự xử lý bằng localStorage.

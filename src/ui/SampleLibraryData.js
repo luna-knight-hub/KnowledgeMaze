@@ -220,7 +220,7 @@ const SAMPLE_MAZES = [
             milestones: [
                 { x: 3, y: 3, type: 'mcq', question: 'Vòng lặp "Forever" chạy bao nhiêu lần?', options: ['10 lần', '100 lần', 'Mãi mãi', 'Chỉ 1 lần'], correct: 2, points: 150, time: 25 },
                 { x: 7, y: 1, type: 'image', question: 'Khối lệnh "If...then" thuộc nhóm lệnh nào?', image: 'assets/images/scratch_control.png', options: ['Events', 'Control', 'Sensing', 'Operators'], correct: 1, points: 150, time: 25 },
-                { x: 6, y: 3, type: 'audio', question: 'Đây là âm thanh khi nhân vật chạm vào chướng ngại vật (Boing)?', audio: 'assets/audio/scratch_boing.mp3', options: ['Chạm tường', 'Nhảy lên', 'Biến mất', 'Xuất hiện'], correct: 1, points: 150, time: 25 },
+                { x: 6, y: 3, type: 'audio', question: 'Đây là âm thanh khi nhân vật chạm vào chướng ngại vật (Boing)?', audio: 'assets/audio/scratch_boing.wav', options: ['Chạm tường', 'Nhảy lên', 'Biến mất', 'Xuất hiện'], correct: 1, points: 150, time: 25 },
                 { x: 1, y: 5, type: 'matching', question: 'Nối điều kiện với khối lệnh:', pairs: [{ left: 'Nhấn phím Space', right: 'Sensing' }, { left: '2 > 1', right: 'Operators' }, { left: 'Lặp 10 lần', right: 'Control' }], points: 150, time: 25 },
                 { x: 8, y: 7, type: 'fill', question: 'Để nhân vật nói gì đó trong 2 giây, ta dùng khối lệnh "___ for 2 seconds"?', correct_answers: ['say', 'Say'], points: 150, time: 25 }
             ]
@@ -246,7 +246,7 @@ const SAMPLE_MAZES = [
             milestones: [
                 { x: 4, y: 1, type: 'mcq', question: 'Để lưu trữ điểm số trong game Scratch, em cần tạo một?', options: ['Hàm', 'Biến (Variable)', 'Trang phục', 'Sân khấu'], correct: 1, points: 200, time: 20 },
                 { x: 8, y: 4, type: 'image', question: 'Khối lệnh này dùng để làm gì?', image: 'assets/images/scratch_broadcast.png', options: ['Thay đổi kích thước', 'Phát tin nhắn (Broadcast)', 'Ẩn nhân vật', 'Vẽ hình'], correct: 1, points: 200, time: 20 },
-                { x: 4, y: 8, type: 'audio', question: 'Âm thanh thắng cuộc thường dùng trong game?', audio: 'assets/audio/game_win.mp3', options: ['Thắng', 'Thua', 'Cảnh báo', 'Nhạc nền'], correct: 0, points: 200, time: 20 },
+                { x: 4, y: 8, type: 'audio', question: 'Âm thanh thắng cuộc thường dùng trong game?', audio: 'assets/audio/game_win.wav', options: ['Thắng', 'Thua', 'Cảnh báo', 'Nhạc nền'], correct: 0, points: 200, time: 20 },
                 { x: 1, y: 4, type: 'matching', question: 'Nối khái niệm:', pairs: [{ left: 'Backdrop', right: 'Phông nền' }, { left: 'Costume', right: 'Trang phục' }, { left: 'Script', right: 'Kịch bản lệnh' }], points: 200, time: 20 },
                 { x: 3, y: 6, type: 'fill', question: 'Trong tọa độ Scratch, tâm của sân khấu có tọa độ x = 0, y = ___?', correct_answers: ['0'], points: 200, time: 20 }
             ]

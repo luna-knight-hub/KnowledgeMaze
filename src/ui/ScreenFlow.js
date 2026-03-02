@@ -10,8 +10,8 @@ const CompetitionGuard = (() => {
     let _status = 'ACTIVE';
 
     function _getWindow() {
-        const cfg = window.GAME_CONFIG?.settings?.competition_window;
-        if (!cfg) return { start: null, end: null };
+        const cfg = (window.ACTIVE_GAME_CONFIG || window.GAME_CONFIG)?.settings?.competition_window;
+        if (!cfg || Array.isArray(window.GAME_CONFIG) && !window.ACTIVE_GAME_CONFIG) return { start: null, end: null };
         return {
             start: cfg.start ? new Date(cfg.start) : null,
             end: cfg.end ? new Date(cfg.end) : null,
@@ -311,9 +311,9 @@ function initGame() {
     // Ẩn completion overlay nếu còn hiện
     document.getElementById('completion-overlay').classList.add('hidden');
 
-    const config = window.GAME_CONFIG;
+    const config = window.ACTIVE_GAME_CONFIG;
     if (!config) {
-        console.error('[ScreenFlow] GAME_CONFIG chưa được set.');
+        console.error('[ScreenFlow] ACTIVE_GAME_CONFIG chưa được set. Chọn ma trận trước.');
         return;
     }
 

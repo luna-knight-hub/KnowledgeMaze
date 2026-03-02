@@ -60,8 +60,11 @@ class MazeLibrary {
      */
     static save(data) {
         const all = this.getAll();
+        const uid = data.id || (typeof crypto !== 'undefined' && crypto.randomUUID
+            ? `maze_${crypto.randomUUID()}`
+            : `maze_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`);
         const entry = {
-            id: `maze_${Date.now()}`,
+            id: uid,
             title: data.title || 'Ma trận không tên',
             description: data.description || '',
             grade: Number(data.grade) || 3,
@@ -107,11 +110,11 @@ class MazeLibrary {
         }
     }
 
-    /** Nạp config vào window.GAME_CONFIG để game dùng */
+    /** Nạp config vào window.ACTIVE_GAME_CONFIG để game dùng */
     static activateMaze(id) {
         const entry = this.getById(id);
         if (!entry) return false;
-        window.GAME_CONFIG = entry.config;
+        window.ACTIVE_GAME_CONFIG = entry.config;
         window._activeMazeId = id;
         window._activeMazeTitle = entry.title;
         window._activeMazeGrade = entry.grade;
@@ -121,27 +124,71 @@ class MazeLibrary {
 
     // ─── Demo Data ────────────────────────────────────────────────
 
-    /** Nạp dữ liệu mẫu nếu thư viện rỗng */
-    static seedIfEmpty() {
-        if (this.getAll().length > 0) return;
+    /** Tính hash đơn giản để phát hiện config thay đổi */
+    static #configHash() {
+        try {
+            const VERSION = 'v2';  // tăng khi cần buộc re-seed
+            const raw = VERSION + JSON.stringify(window.GAME_CONFIG);
+            let h = 0;
+            for (let i = 0; i < raw.length; i++) {
+                h = ((h << 5) - h) + raw.charCodeAt(i);
+                h |= 0;
+            }
+            return 'cfgv_' + Math.abs(h).toString(36);
+        } catch { return 'cfgv_unknown'; }
+    }
 
-        // SAMPLE_MAZES được định nghĩa trong src/ui/SampleLibraryData.js
-        if (typeof SAMPLE_MAZES === 'undefined') {
-            console.warn('SAMPLE_MAZES not found. Cannot seed library.');
+    /** Nạp dữ liệu mẫu — tự cập nhật nếu config.js thay đổi */
+    static seedIfEmpty() {
+        const configs = window.GAME_CONFIG;
+
+        // Chỉ xử lý khi GAME_CONFIG là mảng
+        if (!Array.isArray(configs) || configs.length === 0) {
+            // Fallback: thử SAMPLE_MAZES (backward compat)
+            if (typeof SAMPLE_MAZES !== 'undefined' && this.getAll().length === 0) {
+                SAMPLE_MAZES.forEach(m => this.save({
+                    title: m.title,
+                    description: m.description || '',
+                    grade: m.grade, icon: m.icon, difficulty: m.difficulty,
+                    config: m.config
+                }));
+            }
             return;
         }
 
-        SAMPLE_MAZES.forEach(m => {
+        // Kiểm tra version — nếu giống thì không cần seed lại
+        const hash = this.#configHash();
+        const stored = localStorage.getItem('km_library_version');
+        if (stored === hash && this.getAll().length > 0) return;
+
+        // Xóa data cũ và seed mới
+        localStorage.removeItem(this.STORAGE_KEY);
+
+        const icons = {
+            '3_1': '🖥️', '3_2': '⌨️', '3_3': '🎨',
+            '4_1': '⚙️', '4_2': '🌐', '4_3': '📝',
+            '5_1': '🐱', '5_2': '🔁', '5_3': '🎮'
+        };
+
+        configs.forEach((cfg, idx) => {
+            const title = cfg.settings?.title || 'Ma trận';
+            const gradeMatch = title.match(/Lớp (\d)/);
+            const grade = gradeMatch ? parseInt(gradeMatch[1]) : 3;
+            const difficulty = title.includes('Khó') ? 3 : title.includes('TB') ? 2 : 1;
+
             this.save({
-                title: m.title,
-                description: m.description || `Ma trận Tin học lớp ${m.grade} - Mức độ ${m.difficulty === 1 ? 'Dễ' : m.difficulty === 2 ? 'Trung bình' : 'Khó'}`,
-                grade: m.grade,
-                icon: m.icon,
-                difficulty: m.difficulty,
-                config: m.config
+                id: `maze_g${grade}_d${difficulty}_${idx}`,
+                title,
+                description: `Ma trận Tin học lớp ${grade} - Mức độ ${difficulty === 1 ? 'Dễ' : difficulty === 2 ? 'Trung bình' : 'Khó'}`,
+                grade,
+                icon: icons[`${grade}_${difficulty}`] || '📚',
+                difficulty,
+                config: cfg
             });
         });
-        console.log(`Đã nạp ${SAMPLE_MAZES.length} ma trận mẫu vào thư viện.`);
+
+        localStorage.setItem('km_library_version', hash);
+        console.log(`[MazeLibrary] Đã nạp ${configs.length} ma trận từ config.js (${hash})`);
     }
 
     // ─── Private ──────────────────────────────────────────────────
