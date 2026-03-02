@@ -207,6 +207,54 @@ class MazeHandler(BaseHTTPRequestHandler):
         parsed = urlparse(self.path)
         params = parse_qs(parsed.query)
 
+        # ── GET static files (html, js, css, png, mp3, ...) ──────────
+        file_path = parsed.path.lstrip('/')
+        if not file_path or file_path == '':
+            file_path = 'index.html'
+
+        # Chặn truy cập file nhạy cảm
+        if file_path in ['server.py', 'km_data.db', 'teacher-config.js']:
+            self._send_json({'error': 'Forbidden'}, 403)
+            return
+
+        # Chặn path traversal (../)
+        base_dir = os.path.abspath(os.path.dirname(__file__))
+        full_path = os.path.abspath(os.path.join(base_dir, file_path))
+        if not full_path.startswith(base_dir):
+            self._send_json({'error': 'Forbidden'}, 403)
+            return
+        if os.path.isfile(full_path):
+            ext = os.path.splitext(full_path)[1].lower()
+            mime_types = {
+                '.html': 'text/html',
+                '.js':   'application/javascript',
+                '.css':  'text/css',
+                '.png':  'image/png',
+                '.jpg':  'image/jpeg',
+                '.jpeg': 'image/jpeg',
+                '.gif':  'image/gif',
+                '.mp3':  'audio/mpeg',
+                '.wav':  'audio/wav',
+                '.ico':  'image/x-icon',
+                '.json': 'application/json',
+            }
+            content_type = mime_types.get(ext, 'application/octet-stream')
+            
+            try:
+                with open(full_path, 'rb') as f:
+                    content = f.read()
+                self.send_response(200)
+                self.send_header('Content-Type', content_type)
+                self.send_header('Content-Length', len(content))
+                self.send_header('Access-Control-Allow-Origin', '*')
+                self.end_headers()
+                self.wfile.write(content)
+                return
+            except Exception as e:
+                self._send_json({'error': str(e)}, 500)
+                return
+
+        # ── API routes ──────────────────────────────────────────────
         # ── GET /api/competition-status ───────────────────────────
         if parsed.path == '/api/competition-status':
             start = params.get('start', [None])[0]

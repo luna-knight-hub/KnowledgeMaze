@@ -124,65 +124,24 @@ class MazeLibrary {
     /** Nạp dữ liệu mẫu nếu thư viện rỗng */
     static seedIfEmpty() {
         if (this.getAll().length > 0) return;
-        const demoMaze = [
-            [1, 1, 1, 1, 1, 1, 1, 1, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 1, 1, 1, 0, 1, 0, 1],
-            [1, 0, 1, 0, 0, 0, 1, 0, 1],
-            [1, 0, 1, 0, 1, 1, 1, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 1, 0, 1, 0, 1, 0, 1],
-            [1, 0, 0, 0, 1, 0, 0, 0, 1],
-            [1, 1, 1, 1, 1, 1, 1, 1, 1],
-        ];
-        const demos = [
-            {
-                grade: 3, icon: '🖥', title: 'Tin học Lớp 3 — Thiết bị máy tính', description: 'Khám phá các bộ phận của máy tính', difficulty: 1,
-                milestones: [
-                    { id: 'm1', x: 2, y: 2, type: 'mcq', question: 'Thiết bị nào dùng để nhập dữ liệu?', options: ['Màn hình', 'Bàn phím', 'Loa', 'Máy in'], correct: 1, points: 100, time: 20 },
-                    { id: 'm2', x: 6, y: 2, type: 'fill', question: 'CPU là viết tắt của từ gì trong tiếng Anh? (Gợi ý: Central Processing ___)', correct_answers: ['Unit', 'unit'], points: 120, time: 25 },
-                    { id: 'm3', x: 6, y: 6, type: 'mcq', question: 'Bộ nhớ nào mất dữ liệu khi tắt máy?', options: ['Ổ cứng HDD', 'RAM', 'ROM', 'USB'], correct: 1, points: 100, time: 20 },
-                    { id: 'm4', x: 2, y: 6, type: 'mcq', question: 'Thiết bị xuất nào phổ biến nhất?', options: ['Máy quét', 'Loa', 'Màn hình', 'Webcam'], correct: 2, points: 100, time: 20 },
-                ]
-            },
-            {
-                grade: 4, icon: '🌐', title: 'Tin học Lớp 4 — Mạng máy tính', description: 'Tìm hiểu về internet và mạng máy tính', difficulty: 2,
-                milestones: [
-                    { id: 'm1', x: 2, y: 2, type: 'mcq', question: 'WWW là viết tắt của?', options: ['World Wide Web', 'Wide World Web', 'World Web Wide', 'Web World Wide'], correct: 0, points: 100, time: 20 },
-                    { id: 'm2', x: 6, y: 2, type: 'mcq', question: 'Thiết bị nào kết nối mạng Wi-Fi?', options: ['Bộ định tuyến (Router)', 'Màn hình', 'Ổ cứng', 'RAM'], correct: 0, points: 100, time: 20 },
-                    { id: 'm3', x: 6, y: 6, type: 'matching', question: 'Nối đúng các khái niệm mạng:', pairs: [{ left: 'Email', right: 'Thư điện tử' }, { left: 'Browser', right: 'Trình duyệt web' }, { left: 'URL', right: 'Địa chỉ trang web' }], points: 150, time: 35 },
-                    { id: 'm4', x: 2, y: 6, type: 'fill', question: 'HTTP là viết tắt của HyperText Transfer ___?', correct_answers: ['Protocol', 'protocol'], points: 120, time: 25 },
-                ]
-            },
-            {
-                grade: 5, icon: '💻', title: 'Tin học Lớp 5 — Thuật toán & Lập trình', description: 'Làm quen với lập trình và tư duy thuật toán', difficulty: 3,
-                milestones: [
-                    { id: 'm1', x: 2, y: 2, type: 'mcq', question: 'Thuật toán là gì?', options: ['Dãy các bước giải quyết vấn đề', 'Ngôn ngữ lập trình', 'Phần cứng máy tính', 'Hệ điều hành'], correct: 0, points: 100, time: 20 },
-                    { id: 'm2', x: 6, y: 2, type: 'mcq', question: 'Trong lập trình Scratch, khối nào dùng để lặp lại?', options: ['If/Else', 'Repeat/Forever', 'Say', 'Move'], correct: 1, points: 100, time: 20 },
-                    { id: 'm3', x: 6, y: 6, type: 'matching', question: 'Nối cấu trúc điều khiển với mô tả:', pairs: [{ left: 'Rẽ nhánh', right: 'Nếu... thì...' }, { left: 'Lặp', right: 'Làm đi làm lại' }, { left: 'Tuần tự', right: 'Từng bước một' }], points: 150, time: 35 },
-                    { id: 'm4', x: 2, y: 6, type: 'fill', question: 'Trong Scratch, lệnh "move ___ steps" dùng để làm gì? (Điền số)', correct_answers: ['10', '10 steps'], points: 120, time: 25 },
-                ]
-            },
-        ];
 
-        demos.forEach(d => {
+        // SAMPLE_MAZES được định nghĩa trong src/ui/SampleLibraryData.js
+        if (typeof SAMPLE_MAZES === 'undefined') {
+            console.warn('SAMPLE_MAZES not found. Cannot seed library.');
+            return;
+        }
+
+        SAMPLE_MAZES.forEach(m => {
             this.save({
-                title: d.title, description: d.description,
-                grade: d.grade, icon: d.icon, difficulty: d.difficulty,
-                config: {
-                    settings: {
-                        title: d.title,
-                        play_limit_per_day: 3,
-                        competition_window: {
-                            start: '2026-01-01T00:00:00',
-                            end: '2099-12-31T23:59:59'
-                        }
-                    },
-                    maze: demoMaze,
-                    milestones: d.milestones
-                }
+                title: m.title,
+                description: m.description || `Ma trận Tin học lớp ${m.grade} - Mức độ ${m.difficulty === 1 ? 'Dễ' : m.difficulty === 2 ? 'Trung bình' : 'Khó'}`,
+                grade: m.grade,
+                icon: m.icon,
+                difficulty: m.difficulty,
+                config: m.config
             });
         });
+        console.log(`Đã nạp ${SAMPLE_MAZES.length} ma trận mẫu vào thư viện.`);
     }
 
     // ─── Private ──────────────────────────────────────────────────
