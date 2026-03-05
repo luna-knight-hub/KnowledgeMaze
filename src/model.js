@@ -57,6 +57,12 @@ class GameModel {
         return false;
     }
 
+    /** Trả về true nếu player đang đứng tại điểm End */
+    isAtEnd() {
+        if (!this.config.end) return false;
+        return this.player.x === this.config.end.x && this.player.y === this.config.end.y;
+    }
+
     getMilestoneAtCurrentPos() {
         return this.config.milestones.find(
             m => m.x === this.player.x && m.y === this.player.y

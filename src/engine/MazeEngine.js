@@ -20,6 +20,7 @@ class MazeEngine {
     #onCellEnter = null;
     #pulseFrame = 0;
     #animFrame = null;
+    #playerIconImg = null;  // HTMLImageElement cho icon SVG
 
     /**
      * @param {HTMLCanvasElement} canvas
@@ -36,7 +37,25 @@ class MazeEngine {
         this.#start = start ?? { x: 1, y: 1 };
         this.#end = end ?? null;
         this.#cellSize = canvas.width / mazeData[0].length;
+        // Đặt player về điểm start
+        this.#playerX = this.#start.x;
+        this.#playerY = this.#start.y;
         this.#startAnimLoop();
+    }
+
+    /**
+     * Đặt icon SVG cho nhân vật.
+     * @param {string|null} dataUrl - Data URL của file SVG, hoặc null để dùng neon circle
+     */
+    setPlayerIcon(dataUrl) {
+        if (!dataUrl) {
+            this.#playerIconImg = null;
+            return;
+        }
+        const img = new Image();
+        img.onload = () => { this.#playerIconImg = img; };
+        img.onerror = () => { this.#playerIconImg = null; };
+        img.src = dataUrl;
     }
 
     // ─── Position API ────────────────────────────────────────────
@@ -187,26 +206,36 @@ class MazeEngine {
         if (this.#start) this.#drawPortal(this.#start.x, this.#start.y, '#00ff88', '#00cc66', 'S', angle);
         if (this.#end) this.#drawPortal(this.#end.x, this.#end.y, '#ff4466', '#cc0033', 'E', -angle);
 
-        // 4. Nhân vật (neon glow)
+        // 4. Nhân vật
         const px = this.#playerX * cs + cs / 2;
         const py = this.#playerY * cs + cs / 2;
         const pr = cs * 0.28;
         const playerPulse = Math.sin(this.#pulseFrame * 0.08) * 0.15 + 0.85;
 
         ctx.save();
-        ctx.shadowBlur = 22 * playerPulse;
-        ctx.shadowColor = '#00f3ff';
-        ctx.fillStyle = '#00f3ff';
-        ctx.beginPath();
-        ctx.arc(px, py, pr, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Tâm trắng
-        ctx.shadowBlur = 0;
-        ctx.fillStyle = 'rgba(255,255,255,0.85)';
-        ctx.beginPath();
-        ctx.arc(px, py, pr * 0.28, 0, Math.PI * 2);
-        ctx.fill();
+        if (this.#playerIconImg) {
+            // Vẽ icon SVG với glow
+            const iconSize = cs * 0.72;
+            ctx.shadowBlur = 18 * playerPulse;
+            ctx.shadowColor = '#00f3ff';
+            ctx.globalAlpha = 0.92 + 0.08 * playerPulse;
+            ctx.drawImage(this.#playerIconImg,
+                px - iconSize / 2, py - iconSize / 2, iconSize, iconSize);
+        } else {
+            // Neon circle mặc định
+            ctx.shadowBlur = 22 * playerPulse;
+            ctx.shadowColor = '#00f3ff';
+            ctx.fillStyle = '#00f3ff';
+            ctx.beginPath();
+            ctx.arc(px, py, pr, 0, Math.PI * 2);
+            ctx.fill();
+            // Tâm trắng
+            ctx.shadowBlur = 0;
+            ctx.fillStyle = 'rgba(255,255,255,0.85)';
+            ctx.beginPath();
+            ctx.arc(px, py, pr * 0.28, 0, Math.PI * 2);
+            ctx.fill();
+        }
         ctx.restore();
     }
 

@@ -116,6 +116,7 @@ let playerState = {
     score: 0,
     ip: 'unknown',
     activeMazeId: null,    // ID trong MazeLibrary
+    avatarIcon: null,      // Data URL của SVG icon (null = mặc định)
 };
 
 let _mazeFilter = 'all';   // grade filter hiện tại trên màn hình chọn
@@ -159,7 +160,89 @@ document.addEventListener('DOMContentLoaded', async () => {
     nameInput.addEventListener('input', () => {
         enterBtn.disabled = nameInput.value.trim().length < 2 || !playerState.activeMazeId;
     });
+
+    // Vẽ preview mặc định (neon circle)
+    _drawDefaultAvatarPreview();
 });
+
+// ─── AVATAR UPLOAD ───────────────────────────────────────────────
+
+function _drawDefaultAvatarPreview() {
+    const canvas = document.getElementById('avatar-preview-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const w = canvas.width, h = canvas.height;
+    ctx.clearRect(0, 0, w, h);
+    // Gradient background
+    const bg = ctx.createRadialGradient(w / 2, h / 2, 2, w / 2, h / 2, w / 2);
+    bg.addColorStop(0, 'rgba(0,30,50,0.8)');
+    bg.addColorStop(1, 'rgba(0,5,20,0.95)');
+    ctx.fillStyle = bg;
+    ctx.beginPath();
+    ctx.arc(w / 2, h / 2, w / 2, 0, Math.PI * 2);
+    ctx.fill();
+    // Neon circle
+    ctx.shadowBlur = 18;
+    ctx.shadowColor = '#00f3ff';
+    ctx.fillStyle = '#00f3ff';
+    ctx.beginPath();
+    ctx.arc(w / 2, h / 2, w * 0.28, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = 'rgba(255,255,255,0.88)';
+    ctx.beginPath();
+    ctx.arc(w / 2, h / 2, w * 0.09, 0, Math.PI * 2);
+    ctx.fill();
+}
+
+function handleAvatarUpload(event) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Validate SVG
+    if (!file.name.toLowerCase().endsWith('.svg') && file.type !== 'image/svg+xml') {
+        alert('Vui lòng chọn file định dạng SVG!');
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        const dataUrl = e.target.result;
+        playerState.avatarIcon = dataUrl;
+
+        // Cập nhật preview canvas
+        const canvas = document.getElementById('avatar-preview-canvas');
+        if (canvas) {
+            const ctx = canvas.getContext('2d');
+            const img = new Image();
+            img.onload = () => {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                // Vẽ nền tối
+                ctx.fillStyle = 'rgba(0,5,20,0.95)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(img, 4, 4, canvas.width - 8, canvas.height - 8);
+            };
+            img.src = dataUrl;
+        }
+
+        // Hiện nút reset
+        const resetBtn = document.getElementById('avatar-reset-btn');
+        if (resetBtn) resetBtn.style.display = '';
+    };
+    reader.readAsDataURL(file);
+}
+
+function resetAvatar() {
+    playerState.avatarIcon = null;
+    // Reset file input
+    const fileInput = document.getElementById('avatar-svg-input');
+    if (fileInput) fileInput.value = '';
+    // Vẽ lại preview mặc định
+    _drawDefaultAvatarPreview();
+    // Ẩn nút reset
+    const resetBtn = document.getElementById('avatar-reset-btn');
+    if (resetBtn) resetBtn.style.display = 'none';
+}
 
 // ─── MAZE SELECTION SCREEN ──────────────────────────────────────
 
@@ -322,6 +405,11 @@ function initGame() {
     const model = new GameModel(config);
     const view = new GameView(mazeEngine, questionEngine);
     const controller = new GameController(model, view, onGameComplete);
+
+    // Áp dụng icon SVG nếu có
+    if (playerState.avatarIcon) {
+        mazeEngine.setPlayerIcon(playerState.avatarIcon);
+    }
 
     window.game = { model, view, controller };
 }

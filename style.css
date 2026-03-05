@@ -2111,3 +2111,120 @@ body {
         font-size: 1rem;
     }
 }
+
+/* ══════════════════════════════════════════════════════════════
+   AVATAR PICKER — Entry screen character customization
+══════════════════════════════════════════════════════════════ */
+.avatar-section {
+    margin: 20px 0 0;
+    background: var(--card-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 16px 18px;
+}
+
+.avatar-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 14px;
+}
+
+.avatar-picker {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.avatar-preview-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    flex-shrink: 0;
+}
+
+#avatar-preview-canvas {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border-glow);
+    background: #030616;
+    box-shadow: 0 0 14px rgba(0, 243, 255, 0.15);
+}
+
+.avatar-preview-hint {
+    font-size: 0.62rem;
+    color: var(--text-dim);
+    letter-spacing: 0.5px;
+}
+
+.avatar-upload-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+    min-width: 0;
+}
+
+.avatar-upload-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 16px;
+    background: transparent;
+    border: 1.5px dashed rgba(0, 243, 255, 0.35);
+    border-radius: var(--radius-sm);
+    color: var(--primary);
+    font-family: var(--font);
+    font-size: 0.84rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition);
+    text-align: center;
+}
+
+.avatar-upload-btn:hover {
+    background: var(--primary-dim);
+    border-color: var(--primary);
+    box-shadow: 0 0 12px rgba(0, 243, 255, 0.15);
+}
+
+.avatar-reset-btn {
+    padding: 7px 12px;
+    background: transparent;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-dim);
+    font-family: var(--font);
+    font-size: 0.78rem;
+    cursor: pointer;
+    transition: all var(--transition);
+}
+
+.avatar-reset-btn:hover {
+    border-color: rgba(255, 0, 122, 0.4);
+    color: #ff007a;
+}
+
+.avatar-upload-hint {
+    font-size: 0.68rem;
+    color: var(--text-dim);
+    margin: 0;
+}
+
+/* ── Empty star styling for partial rewards ── */
+.stars {
+    font-size: 1.4rem;
+    margin-top: 8px;
+    letter-spacing: 2px;
+}
+
+/* ☆ dimmer than ⭐ */
+.stars {
+    opacity: 0.95;
+    text-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
+}

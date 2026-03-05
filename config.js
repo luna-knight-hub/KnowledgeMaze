@@ -71,11 +71,11 @@ window.GAME_CONFIG = [
       [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
     ],
     "milestones": [
-      { "x": 2, "y": 3, "type": "mcq", "question": "Phím dài nhất trên bàn phím là phím?", "options": ["Enter", "Shift", "Space (Cách)", "Ctrl"], "correct": 2, "points": 150, "time": 25 },
-      { "x": 6, "y": 3, "type": "image", "question": "Ngón tay nào được dùng để nhấn phím Space?", "image": "assets/images/g3_typing.png", "options": ["Ngón trỏ", "Ngón giữa", "Ngón cái", "Ngón út"], "correct": 2, "points": 150, "time": 25 },
-      { "x": 6, "y": 5, "type": "audio", "question": "Nghe và đoán thao tác chuột:", "audio": "assets/audio/g3_double_click.wav", "options": ["Nháy chuột", "Nháy đúp chuột", "Kéo thả chuột", "Nháy chuột phải"], "correct": 1, "points": 150, "time": 25 },
-      { "x": 1, "y": 5, "type": "matching", "question": "Nối phím với chức năng:", "pairs": [{ "left": "Shift", "right": "Gõ chữ hoa" }, { "left": "Enter", "right": "Xuống dòng" }, { "left": "Backspace", "right": "Xóa ký tự bên trái" }], "points": 150, "time": 25 },
-      { "x": 3, "y": 7, "type": "fill", "question": "Khi gõ phím, hai ngón trỏ đặt lên phím F và phím ___ (có gờ nổi)?", "correct_answers": ["J", "j"], "points": 150, "time": 25 }
+      { "x": 3, "y": 7, "type": "mcq", "question": "Phím dài nhất trên bàn phím là phím?", "options": ["Enter", "Shift", "Space (Cách)", "Ctrl"], "correct": 2, "points": 150, "time": 25 },
+      { "x": 1, "y": 5, "type": "image", "question": "Ngón tay nào được dùng để nhấn phím Space?", "image": "assets/images/g3_typing.png", "options": ["Ngón trỏ", "Ngón giữa", "Ngón cái", "Ngón út"], "correct": 2, "points": 150, "time": 25 },
+      { "x": 2, "y": 3, "type": "audio", "question": "Nghe và đoán thao tác chuột:", "audio": "assets/audio/g3_double_click.wav", "options": ["Nháy chuột", "Nháy đúp chuột", "Kéo thả chuột", "Nháy chuột phải"], "correct": 1, "points": 150, "time": 25 },
+      { "x": 6, "y": 5, "type": "matching", "question": "Nối phím với chức năng:", "pairs": [{ "left": "Shift", "right": "Gõ chữ hoa" }, { "left": "Enter", "right": "Xuống dòng" }, { "left": "Backspace", "right": "Xóa ký tự bên trái" }], "points": 150, "time": 25 },
+      { "x": 6, "y": 3, "type": "fill", "question": "Khi gõ phím, hai ngón trỏ đặt lên phím F và phím ___ (có gờ nổi)?", "correct_answers": ["J", "j"], "points": 150, "time": 25 }
     ]
   },
 
@@ -97,17 +97,17 @@ window.GAME_CONFIG = [
       [1, 0, 1, 0, 0, 0, 0, 1, 0, 1],
       [1, 0, 1, 0, 1, 1, 0, 1, 0, 1],
       [1, 0, 1, 0, 1, 1, 0, 1, 0, 1],
-      [1, 0, 1, 0, 0, 0, 0, 1, 0, 1],
+      [1, 0, 0, 0, 0, 0, 0, 1, 0, 1],
       [1, 0, 1, 1, 1, 1, 1, 1, 0, 1],
       [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
       [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
     ],
     "milestones": [
       { "x": 4, "y": 1, "type": "mcq", "question": "Công cụ nào dùng để tô màu vùng kín?", "options": ["Bút vẽ", "Bình màu", "Tẩy", "Cọ vẽ"], "correct": 1, "points": 200, "time": 20 },
-      { "x": 8, "y": 4, "type": "image", "question": "Biểu tượng này dùng để làm gì?", "image": "assets/images/paint_save.png", "options": ["Mở file", "Lưu file", "In file", "Thoát"], "correct": 1, "points": 200, "time": 20 },
-      { "x": 4, "y": 8, "type": "audio", "question": "Âm thanh của thao tác nào trong Paint?", "audio": "assets/audio/paint_spray.wav", "options": ["Tô màu", "Xóa hình", "Vẽ bình xịt", "Vẽ đường thẳng"], "correct": 2, "points": 200, "time": 20 },
-      { "x": 1, "y": 4, "type": "matching", "question": "Nối phím tắt với chức năng:", "pairs": [{ "left": "Ctrl + S", "right": "Lưu hình" }, { "left": "Ctrl + N", "right": "Mở trang mới" }, { "left": "Ctrl + Z", "right": "Hoàn tác (Quay lại)" }], "points": 200, "time": 20 },
-      { "x": 3, "y": 6, "type": "fill", "question": "Để vẽ hình vuông hoàn hảo trong Paint, em nhấn giữ phím ___ khi kéo chuột?", "correct_answers": ["Shift", "shift"], "points": 200, "time": 20 }
+      { "x": 1, "y": 4, "type": "image", "question": "Biểu tượng này dùng để làm gì?", "image": "assets/images/paint_save.png", "options": ["Mở file", "Lưu file", "In file", "Thoát"], "correct": 1, "points": 200, "time": 20 },
+      { "x": 3, "y": 6, "type": "audio", "question": "Âm thanh của thao tác nào trong Paint?", "audio": "assets/audio/paint_spray.wav", "options": ["Tô màu", "Xóa hình", "Vẽ bình xịt", "Vẽ đường thẳng"], "correct": 2, "points": 200, "time": 20 },
+      { "x": 4, "y": 8, "type": "matching", "question": "Nối phím tắt với chức năng:", "pairs": [{ "left": "Ctrl + S", "right": "Lưu hình" }, { "left": "Ctrl + N", "right": "Mở trang mới" }, { "left": "Ctrl + Z", "right": "Hoàn tác (Quay lại)" }], "points": 200, "time": 20 },
+      { "x": 8, "y": 4, "type": "fill", "question": "Để vẽ hình vuông hoàn hảo trong Paint, em nhấn giữ phím ___ khi kéo chuột?", "correct_answers": ["Shift", "shift"], "points": 200, "time": 20 }
     ]
   },
 
@@ -132,14 +132,14 @@ window.GAME_CONFIG = [
       [1, 1, 1, 1, 1, 1, 0, 1, 0, 1],
       [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
       [1, 0, 1, 1, 1, 1, 1, 1, 0, 1],
-      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+      [1, 1, 1, 1, 1, 1, 1, 1, 0, 1]
     ],
     "milestones": [
       { "x": 3, "y": 1, "type": "mcq", "question": "Thiết bị nào là phần cứng?", "options": ["Windows 10", "Bàn phím", "Paint", "Scratch"], "correct": 1, "points": 100, "time": 30 },
       { "x": 5, "y": 3, "type": "image", "question": "Đây là biểu tượng của hệ điều hành nào?", "image": "assets/images/logo_windows.png", "options": ["MacOS", "Linux", "Windows", "Android"], "correct": 2, "points": 100, "time": 30 },
-      { "x": 1, "y": 7, "type": "audio", "question": "Âm thanh khởi động của hệ điều hành nào?", "audio": "assets/audio/win_start.wav", "options": ["Windows", "MacOS", "Linux", "ChromeOS"], "correct": 0, "points": 100, "time": 30 },
+      { "x": 8, "y": 3, "type": "audio", "question": "Âm thanh khởi động của hệ điều hành nào?", "audio": "assets/audio/win_start.wav", "options": ["Windows", "MacOS", "Linux", "ChromeOS"], "correct": 0, "points": 100, "time": 30 },
       { "x": 6, "y": 5, "type": "matching", "question": "Phân loại thiết bị:", "pairs": [{ "left": "Máy in", "right": "Phần cứng" }, { "left": "Youtube", "right": "Phần mềm/Web" }, { "left": "Micro", "right": "Phần cứng" }], "points": 100, "time": 30 },
-      { "x": 8, "y": 3, "type": "fill", "question": "Người ta gọi các chương trình chạy trong máy tính là phần ___?", "correct_answers": ["mềm", "Mềm", "software"], "points": 100, "time": 30 }
+      { "x": 1, "y": 7, "type": "fill", "question": "Người ta gọi các chương trình chạy trong máy tính là phần ___?", "correct_answers": ["mềm", "Mềm", "software"], "points": 100, "time": 30 }
     ]
   },
 
@@ -153,7 +153,7 @@ window.GAME_CONFIG = [
       "competition_window": { "start": "2026-01-01T00:00:00", "end": "2099-12-31T23:59:59" }
     },
     "start": { "x": 1, "y": 1 },
-    "end": { "x": 5, "y": 5 },
+    "end": { "x": 1, "y": 8 },
     "maze": [
       [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
       [1, 0, 0, 0, 1, 0, 0, 0, 0, 1],
@@ -163,8 +163,8 @@ window.GAME_CONFIG = [
       [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
       [1, 1, 1, 1, 1, 1, 1, 1, 0, 1],
       [1, 0, 0, 0, 0, 0, 0, 1, 0, 1],
-      [1, 0, 1, 1, 1, 1, 0, 0, 0, 1],
-      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+      [1, 0, 1, 1, 1, 0, 0, 0, 0, 1],
+      [1, 0, 1, 1, 1, 1, 1, 1, 1, 1]
     ],
     "milestones": [
       { "x": 1, "y": 3, "type": "mcq", "question": "Trang web nào là công cụ tìm kiếm phổ biến nhất?", "options": ["Facebook", "Google", "Shopee", "Youtube"], "correct": 1, "points": 150, "time": 25 },
@@ -199,11 +199,11 @@ window.GAME_CONFIG = [
       [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
     ],
     "milestones": [
-      { "x": 4, "y": 3, "type": "mcq", "question": "Để chèn bảng vào Word, em vào tab nào?", "options": ["Home", "Insert", "Design", "Layout"], "correct": 1, "points": 200, "time": 20 },
-      { "x": 8, "y": 1, "type": "image", "question": "Nút này dùng để làm gì trong Word?", "image": "assets/images/word_bold.png", "options": ["In nghiêng", "In đậm", "Gạch chân", "Đổi màu chữ"], "correct": 1, "points": 200, "time": 20 },
-      { "x": 4, "y": 7, "type": "audio", "question": "Âm thanh khi in tài liệu?", "audio": "assets/audio/printer_noise.wav", "options": ["In ấn", "Scan", "Photo", "Fax"], "correct": 0, "points": 200, "time": 20 },
-      { "x": 1, "y": 5, "type": "matching", "question": "Nối phím tắt:", "pairs": [{ "left": "Ctrl + C", "right": "Sao chép" }, { "left": "Ctrl + V", "right": "Dán" }, { "left": "Ctrl + X", "right": "Cắt" }], "points": 200, "time": 20 },
-      { "x": 3, "y": 3, "type": "fill", "question": "Font chữ phổ biến nhất trong văn bản hành chính Việt Nam là Times New ___?", "correct_answers": ["Roman", "roman"], "points": 200, "time": 20 }
+      { "x": 4, "y": 7, "type": "mcq", "question": "Để chèn bảng vào Word, em vào tab nào?", "options": ["Home", "Insert", "Design", "Layout"], "correct": 1, "points": 200, "time": 20 },
+      { "x": 1, "y": 5, "type": "image", "question": "Nút này dùng để làm gì trong Word?", "image": "assets/images/word_bold.png", "options": ["In nghiêng", "In đậm", "Gạch chân", "Đổi màu chữ"], "correct": 1, "points": 200, "time": 20 },
+      { "x": 4, "y": 1, "type": "audio", "question": "Âm thanh khi in tài liệu?", "audio": "assets/audio/printer_noise.wav", "options": ["In ấn", "Scan", "Photo", "Fax"], "correct": 0, "points": 200, "time": 20 },
+      { "x": 8, "y": 1, "type": "matching", "question": "Nối phím tắt:", "pairs": [{ "left": "Ctrl + C", "right": "Sao chép" }, { "left": "Ctrl + V", "right": "Dán" }, { "left": "Ctrl + X", "right": "Cắt" }], "points": 200, "time": 20 },
+      { "x": 4, "y": 3, "type": "fill", "question": "Font chữ phổ biến nhất trong văn bản hành chính Việt Nam là Times New ___?", "correct_answers": ["Roman", "roman"], "points": 200, "time": 20 }
     ]
   },
 

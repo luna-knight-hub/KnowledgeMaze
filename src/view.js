@@ -113,7 +113,10 @@ class GameView {
 
     // ─── Reward Feedback ──────────────────────────────────────────
 
-    showReward(points) {
+    showReward(points, maxPoints = points) {
+        const ratio = maxPoints > 0 ? points / maxPoints : 1;
+        const starCount = ratio >= 0.9 ? 3 : ratio >= 0.6 ? 2 : 1;
+        const stars = '⭐'.repeat(starCount) + '☆'.repeat(3 - starCount);
         const popup = document.createElement('div');
         popup.className = 'reward-popup bounce-in';
         popup.innerHTML = `
@@ -121,7 +124,7 @@ class GameView {
                 <span class="reward-icon">🏆</span>
                 <h3>KHEN THƯỞNG!</h3>
                 <p>+<b>${points.toLocaleString('vi-VN')}</b> điểm</p>
-                <div class="stars">⭐⭐⭐</div>
+                <div class="stars">${stars}</div>
             </div>`;
         document.body.appendChild(popup);
         setTimeout(() => popup.remove(), 2500);

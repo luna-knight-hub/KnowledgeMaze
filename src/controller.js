@@ -70,6 +70,7 @@ class GameController {
         this.mazeEngine.setPosition(x, y);
         this.view.render(this.model);
         this.#checkMilestone();
+        this.#checkCompletion(); // kiểm tra sau mỗi di chuyển (cho trường hợp đến End sau khi xong câu hỏi)
     }
 
     // ─── Milestone ─────────────────────────────────────────────────
@@ -109,7 +110,7 @@ class GameController {
 
                 this.view.hideQuiz();
                 SoundManager.play('reward');
-                this.view.showReward(earned);
+                this.view.showReward(earned, milestone.points);
                 this.view.render(this.model);
                 this.model.isLocked = false;
 
@@ -160,7 +161,9 @@ class GameController {
 
     #checkCompletion() {
         const allDone = this.model.config.milestones.every(m => m.completed);
-        if (allDone) {
+        const atEnd = this.model.isAtEnd();
+
+        if (allDone && atEnd) {
             this.model.isLocked = true;   // khóa di chuyển sau khi xong
             SoundManager.play('victory');
             SoundManager.stopBGM();

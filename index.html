@@ -108,6 +108,29 @@
                 <span class="name-input-icon">✏️</span>
             </div>
 
+            <!-- Character customization -->
+            <div class="avatar-section">
+                <div class="avatar-label">🎭 Hình dạng nhân vật</div>
+                <div class="avatar-picker">
+                    <div class="avatar-preview-wrap">
+                        <canvas id="avatar-preview-canvas" width="72" height="72"></canvas>
+                        <div class="avatar-preview-hint">Xem trước</div>
+                    </div>
+                    <div class="avatar-upload-wrap">
+                        <label class="avatar-upload-btn" for="avatar-svg-input">
+                            <span>📂 Tải icon SVG</span>
+                            <input type="file" id="avatar-svg-input" accept=".svg,image/svg+xml"
+                                onchange="handleAvatarUpload(event)" style="display:none">
+                        </label>
+                        <button class="avatar-reset-btn" id="avatar-reset-btn" onclick="resetAvatar()"
+                            style="display:none">
+                            ↩ Dùng mặc định
+                        </button>
+                        <p class="avatar-upload-hint">Định dạng SVG · Hiển thị trong mê cung</p>
+                    </div>
+                </div>
+            </div>
+
             <button class="btn-primary btn-glow" id="btn-enter-maze" onclick="enterMaze()" disabled>
                 🚀 Vào Mê cung!
             </button>
