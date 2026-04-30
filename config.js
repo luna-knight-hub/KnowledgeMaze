@@ -164,7 +164,7 @@ window.GAME_CONFIG = [
       [1, 1, 1, 1, 1, 1, 1, 1, 0, 1],
       [1, 0, 0, 0, 0, 0, 0, 1, 0, 1],
       [1, 0, 1, 1, 1, 0, 0, 0, 0, 1],
-      [1, 0, 1, 1, 1, 1, 1, 1, 1, 1]
+      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
     ],
     "milestones": [
       { "x": 1, "y": 3, "type": "mcq", "question": "Trang web nào là công cụ tìm kiếm phổ biến nhất?", "options": ["Facebook", "Google", "Shopee", "Youtube"], "correct": 1, "points": 150, "time": 25 },
@@ -185,7 +185,7 @@ window.GAME_CONFIG = [
       "competition_window": { "start": "2026-01-01T00:00:00", "end": "2099-12-31T23:59:59" }
     },
     "start": { "x": 1, "y": 8 },
-    "end": { "x": 8, "y": 4 },
+    "end": { "x": 8, "y": 8 },
     "maze": [
       [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
       [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
@@ -231,8 +231,8 @@ window.GAME_CONFIG = [
       [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
     ],
     "milestones": [
-      { "x": 3, "y": 3, "type": "mcq", "question": "Trong Scratch, nhân vật được gọi là?", "options": ["Sprite", "Object", "Actor", "Character"], "correct": 0, "points": 100, "time": 30 },
-      { "x": 5, "y": 1, "type": "image", "question": "Khối lệnh này dùng để làm gì?", "image": "assets/images/scratch_move.png", "options": ["Quay nhân vật", "Di chuyển", "Thay đổi trang phục", "Phát âm thanh"], "correct": 1, "points": 100, "time": 30 },
+      { "x": 4, "y": 3, "type": "mcq", "question": "Trong Scratch, nhân vật được gọi là?", "options": ["Sprite", "Object", "Actor", "Character"], "correct": 0, "points": 100, "time": 30 },
+      { "x": 6, "y": 1, "type": "image", "question": "Khối lệnh này dùng để làm gì?", "image": "assets/images/scratch_move.png", "options": ["Quay nhân vật", "Di chuyển", "Thay đổi trang phục", "Phát âm thanh"], "correct": 1, "points": 100, "time": 30 },
       { "x": 1, "y": 7, "type": "audio", "question": "Âm thanh mặc định của chú mèo Scratch là?", "audio": "assets/audio/scratch_meow.wav", "options": ["Gâu gâu", "Chíp chíp", "Meo meo", "Ùm bò"], "correct": 2, "points": 100, "time": 30 },
       { "x": 6, "y": 5, "type": "matching", "question": "Nối nhóm lệnh với chức năng:", "pairs": [{ "left": "Motion", "right": "Chuyển động" }, { "left": "Looks", "right": "Hiển thị" }, { "left": "Sound", "right": "Âm thanh" }], "points": 100, "time": 30 },
       { "x": 8, "y": 7, "type": "fill", "question": "Lệnh để bắt đầu chương trình khi nhấn vào biểu tượng là \"When ___ clicked\"?", "correct_answers": ["green flag", "lá cờ xanh", "flag"], "points": 100, "time": 30 }
@@ -285,11 +285,11 @@ window.GAME_CONFIG = [
     "maze": [
       [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
       [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-      [1, 0, 1, 1, 1, 1, 1, 1, 0, 1],
+      [1, 0, 1, 0, 1, 1, 1, 1, 0, 1],
       [1, 0, 1, 0, 0, 0, 0, 1, 0, 1],
+      [1, 0, 1, 0, 1, 1, 0, 0, 0, 1],
       [1, 0, 1, 0, 1, 1, 0, 1, 0, 1],
-      [1, 0, 1, 0, 1, 1, 0, 1, 0, 1],
-      [1, 0, 1, 0, 0, 0, 0, 1, 0, 1],
+      [1, 0, 0, 0, 0, 0, 0, 1, 0, 1],
       [1, 0, 1, 1, 1, 1, 1, 1, 0, 1],
       [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
       [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
